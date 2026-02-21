@@ -9,14 +9,14 @@ import org.example.panels.WelcomePanel;
 
 public class Main {
     static void main() {
-        GLProfile glprofile = GLProfile.getDefault();
-        GLCapabilities glcapabilities = new GLCapabilities(glprofile);
-        GameWindow gameWindow = new GameWindow(glcapabilities);
+        GLProfile glProfile = GLProfile.getDefault();
+        GLCapabilities glCapabilities = new GLCapabilities(glProfile);
+        GameWindow gameWindow = new GameWindow(glCapabilities);
 
         MainPanel mainPanel = new MainPanel();
         WelcomePanel welcomePanel = new WelcomePanel(gameWindow);
         NewGamePanel newGamePanel = new NewGamePanel();
-        GameplayPanel gameplayPanel = new GameplayPanel(gameWindow.getGlCapabilities());
+        GameplayPanel gameplayPanel = new GameplayPanel(glCapabilities);
 
         mainPanel.add(welcomePanel);
         mainPanel.add(newGamePanel);
