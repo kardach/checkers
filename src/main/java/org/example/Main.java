@@ -14,6 +14,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Objects;
 
 class OneTriangle {
     protected static void setup(GL2 gl2, int width, int height) {
@@ -51,6 +52,7 @@ public class Main {
     static final JPanel mainPanel = new JPanel(cardLayout);
     static final Font font = new Font("Dialog", Font.BOLD, 18);
     static final JFrame jframe = new JFrame("One Triangle Swing GLJPanel");
+    static String selected;
 
     static void main() {
         jframe.addWindowListener(new WindowAdapter() {
@@ -61,11 +63,15 @@ public class Main {
         });
         mainPanel.setName("MAIN");
 
+
+
         JPanel welcomePanel = getWelcomePanel();
+        JPanel newGamePanel = getNewGamePanel();
         GLJPanel trianglePanel = getGLJPanel();
 
         jframe.add(mainPanel);
         mainPanel.add(welcomePanel);
+        mainPanel.add(newGamePanel);
         mainPanel.add(trianglePanel, BorderLayout.CENTER);
 
         jframe.setSize(640, 480);
@@ -96,6 +102,11 @@ public class Main {
         });
         JButton quitButton = getQuitButton();
         trianglePanel.add(quitButton);
+        JLabel variant = new JLabel();
+        variant.setText(selected);
+        variant.setBounds(200, 200, 200, 50);
+        variant.setFont(font);
+        trianglePanel.add(variant);
         return trianglePanel;
     }
 
@@ -108,6 +119,74 @@ public class Main {
         JButton exitButton = getExitButton();
         welcomePanel.add(exitButton);
         return welcomePanel;
+    }
+
+    private static JPanel getNewGamePanel() {
+        JPanel newGamePanel = new JPanel();
+        newGamePanel.setName("NEW_GAME");
+        newGamePanel.setLayout(null);
+        String[] variants = {"International/Polish", "Ghanaian/damii"};
+        JComboBox<String> variant = new JComboBox<>(variants);
+        variant.setBounds(0, 0, 200, 50);
+        newGamePanel.add(variant);
+
+
+        JButton playButton = getPlayButton(variant);
+        newGamePanel.add(playButton);
+        JButton cancelButton = getCancelButton();
+        newGamePanel.add(cancelButton);
+        return newGamePanel;
+    }
+
+    private static JButton getPlayButton(JComboBox<String> variant) {
+        JButton quitButton = new JButton("Play");
+        quitButton.setBounds(0, 100, 200, 50);
+        quitButton.setFont(font);
+        quitButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                selected = Objects.requireNonNull(variant.getSelectedItem()).toString();
+                cardLayout.next(mainPanel);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+        return quitButton;
+    }
+
+    private static JButton getCancelButton() {
+        JButton quitButton = new JButton("Cancel");
+        quitButton.setBounds(0, 200, 200, 50);
+        quitButton.setFont(font);
+        quitButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                cardLayout.previous(mainPanel);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+        return quitButton;
     }
 
     private static JButton getExitButton() {
