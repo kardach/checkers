@@ -1,20 +1,40 @@
 package org.example.panels;
 
-import com.jogamp.opengl.GLCapabilities;
 import org.example.GameWindow;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MainPanel extends JPanel{
-    public MainPanel(GLCapabilities glCapabilities, GameWindow gameWindow) {
-        CardLayout cardLayout = new CardLayout();
-        Font font = new Font("Dialog", Font.BOLD, 18);
+public class MainPanel {
+    private final JPanel jPanel;
+    private final CardLayout cardLayout;
+    public MainPanel() {
+        jPanel = new JPanel();
+        cardLayout = new CardLayout();
+        jPanel.setLayout(cardLayout);
+        jPanel.setName("MAIN");
+    }
 
-        setLayout(cardLayout);
-        setName("MAIN");
-        add(new WelcomePanel(gameWindow, cardLayout, font));
-        add(new NewGamePanel(cardLayout, font));
-        add(new GameplayPanel(glCapabilities, cardLayout, font), BorderLayout.CENTER);
+    public JPanel getJPanel() {
+        return jPanel;
+    }
+
+    public CardLayout getLayout() {
+        return cardLayout;
+    }
+
+    public void add(WelcomePanel welcomePanel) {
+        welcomePanel.setParent(this);
+        jPanel.add(welcomePanel.getJPanel());
+    }
+
+    public void add(NewGamePanel newGamePanel) {
+        newGamePanel.setParent(this);
+        jPanel.add(newGamePanel.getJPanel());
+    }
+
+    public void add(GameplayPanel gameplayPanel) {
+        gameplayPanel.setParent(this);
+        jPanel.add(gameplayPanel.getGLJPanel());
     }
 }

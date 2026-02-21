@@ -11,12 +11,16 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class GameplayPanel extends GLJPanel {
-    public GameplayPanel(GLCapabilities glCapabilities, CardLayout cardLayout, Font font) {
-        super(glCapabilities);
-        setName("TRIANGLE");
-        setLayout(null);
-        addGLEventListener(new GLEventListener() {
+public class GameplayPanel {
+    private final GLJPanel gljPanel;
+    private static MainPanel parent;
+    private static CardLayout cardLayout;
+
+    public GameplayPanel(GLCapabilities glCapabilities) {
+        gljPanel = new GLJPanel(glCapabilities);
+        gljPanel.setName("TRIANGLE");
+        gljPanel.setLayout(null);
+        gljPanel.addGLEventListener(new GLEventListener() {
             @Override
             public void reshape(GLAutoDrawable glautodrawable, int x, int y, int width, int height) {
                 Triangle.setup(glautodrawable.getGL().getGL2(), width, height);
@@ -34,18 +38,28 @@ public class GameplayPanel extends GLJPanel {
                         glautodrawable.getSurfaceHeight());
             }
         });
-        add(getQuitButton(cardLayout, font));
+        gljPanel.add(getQuitButton());
         JLabel variant = new JLabel();
 //        variant.setText(selected);
         variant.setBounds(200, 200, 200, 50);
-        variant.setFont(font);
-        add(variant);
+        variant.setFont(new Font("Dialog", Font.BOLD, 18));
+        gljPanel.add(variant);
     }
 
-    private JButton getQuitButton(CardLayout cardLayout, Font font) {
+
+    public GLJPanel getGLJPanel() {
+        return gljPanel;
+    }
+
+    void setParent(MainPanel mainPanel) {
+        parent = mainPanel;
+        cardLayout = parent.getLayout();
+    }
+
+    private JButton getQuitButton() {
         JButton quitButton = new JButton("Quit game");
         quitButton.setBounds(0, 0, 200, 50);
-        quitButton.setFont(font);
+        quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
         quitButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {}
@@ -55,7 +69,7 @@ public class GameplayPanel extends GLJPanel {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                cardLayout.previous(getParent());
+                cardLayout.previous(parent.getJPanel());
             }
 
             @Override

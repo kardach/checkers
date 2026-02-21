@@ -5,23 +5,37 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class NewGamePanel extends JPanel{
-    public NewGamePanel(CardLayout cardLayout, Font font) {
+public class NewGamePanel {
+    private final JPanel jPanel;
+    private static MainPanel parent;
+    private static CardLayout cardLayout;
+
+    public NewGamePanel() {
         String[] variants = {"International/Polish", "Ghanaian/damii"};
         JComboBox<String> variant = new JComboBox<>(variants);
         variant.setBounds(0, 0, 200, 50);
 
-        setName("NEW_GAME");
-        setLayout(null);
-        add(variant);
-        add(getPlayButton(cardLayout, font, variant));
-        add(getCancelButton(cardLayout, font));
+        jPanel = new JPanel();
+        jPanel.setName("NEW_GAME");
+        jPanel.setLayout(null);
+        jPanel.add(variant);
+        jPanel.add(getPlayButton(variant));
+        jPanel.add(getCancelButton());
     }
 
-    private JButton getPlayButton(CardLayout cardLayout, Font font, JComboBox<String> variant) {
+    public JPanel getJPanel() {
+        return jPanel;
+    }
+
+    void setParent(MainPanel mainPanel) {
+        parent = mainPanel;
+        cardLayout = parent.getLayout();
+    }
+
+    private JButton getPlayButton(JComboBox<String> variant) {
         JButton quitButton = new JButton("Play");
         quitButton.setBounds(0, 100, 200, 50);
-        quitButton.setFont(font);
+        quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
         quitButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {}
@@ -32,7 +46,7 @@ public class NewGamePanel extends JPanel{
             @Override
             public void mouseReleased(MouseEvent e) {
 //                selected = Objects.requireNonNull(variant.getSelectedItem()).toString();
-                cardLayout.next(getParent());
+                cardLayout.next(parent.getJPanel());
             }
 
             @Override
@@ -44,10 +58,10 @@ public class NewGamePanel extends JPanel{
         return quitButton;
     }
 
-    private JButton getCancelButton(CardLayout cardLayout, Font font) {
+    private JButton getCancelButton() {
         JButton quitButton = new JButton("Cancel");
         quitButton.setBounds(0, 200, 200, 50);
-        quitButton.setFont(font);
+        quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
         quitButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {}
@@ -57,7 +71,7 @@ public class NewGamePanel extends JPanel{
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                cardLayout.previous(getParent());
+                cardLayout.previous(parent.getJPanel());
             }
 
             @Override
