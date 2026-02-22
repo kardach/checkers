@@ -1,7 +1,5 @@
 package org.example.panels;
 
-import org.example.GameWindow;
-
 import javax.swing.*;
 import java.awt.*;
 

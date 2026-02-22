@@ -5,6 +5,7 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLJPanel;
 import org.example.Triangle;
+import org.example.variants.GameVariantSetup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,12 +16,22 @@ public class GameplayPanel {
     private final GLJPanel gljPanel;
     private static MainPanel parent;
     private static CardLayout cardLayout;
+    private static VariantLabel variantLabel;
+    private static boolean becameVisible;
 
-    public GameplayPanel(GLCapabilities glCapabilities) {
+    public GameplayPanel(GLCapabilities glCapabilities, GameVariantSetup gameVariantSetup) {
+        becameVisible = false;
         gljPanel = new GLJPanel(glCapabilities);
         gljPanel.setName("TRIANGLE");
         gljPanel.setLayout(null);
         gljPanel.addGLEventListener(new GLEventListener() {
+            private GameVariantSetup gameVariantSetup;
+
+            private GLEventListener init(GameVariantSetup gameVariantSetup) {
+                this.gameVariantSetup = gameVariantSetup;
+                return this;
+            }
+
             @Override
             public void reshape(GLAutoDrawable glautodrawable, int x, int y, int width, int height) {
                 Triangle.setup(glautodrawable.getGL().getGL2(), width, height);
@@ -34,18 +45,19 @@ public class GameplayPanel {
 
             @Override
             public void display(GLAutoDrawable glautodrawable) {
+                if(!becameVisible) {
+                    becameVisible = true;
+                    variantLabel.setText(gameVariantSetup.getSelected());
+                }
+
                 Triangle.render(glautodrawable.getGL().getGL2(), glautodrawable.getSurfaceWidth(),
                         glautodrawable.getSurfaceHeight());
             }
-        });
-        gljPanel.add(getQuitButton());
-        JLabel variant = new JLabel();
-//        variant.setText(selected);
-        variant.setBounds(200, 200, 200, 50);
-        variant.setFont(new Font("Dialog", Font.BOLD, 18));
-        gljPanel.add(variant);
+        }.init(gameVariantSetup));
+        gljPanel.add(new QuitButton());
+        variantLabel = new VariantLabel();
+        gljPanel.add(variantLabel);
     }
-
 
     public GLJPanel getGLJPanel() {
         return gljPanel;
@@ -56,28 +68,38 @@ public class GameplayPanel {
         cardLayout = parent.getLayout();
     }
 
-    private JButton getQuitButton() {
-        JButton quitButton = new JButton("Quit game");
-        quitButton.setBounds(0, 0, 200, 50);
-        quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
-        quitButton.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {}
+    static class VariantLabel extends JLabel {
+        public VariantLabel() {
+            setBounds(200, 200, 200, 50);
+            setFont(new Font("Dialog", Font.BOLD, 18));
+            setBackground(Color.WHITE);
+        }
+    }
 
-            @Override
-            public void mousePressed(MouseEvent e) {}
+    static class QuitButton extends JButton {
+        public QuitButton() {
+            setText("Quit game");
+            setBounds(0, 0, 200, 50);
+            setFont(new Font("Dialog", Font.BOLD, 18));
+            addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {}
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                cardLayout.previous(parent.getJPanel());
-            }
+                @Override
+                public void mousePressed(MouseEvent e) {}
 
-            @Override
-            public void mouseEntered(MouseEvent e) {}
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    cardLayout.previous(parent.getJPanel());
+                    becameVisible = false;
+                }
 
-            @Override
-            public void mouseExited(MouseEvent e) {}
-        });
-        return quitButton;
+                @Override
+                public void mouseEntered(MouseEvent e) {}
+
+                @Override
+                public void mouseExited(MouseEvent e) {}
+            });
+        }
     }
 }
