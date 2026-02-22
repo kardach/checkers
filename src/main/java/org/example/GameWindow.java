@@ -4,7 +4,6 @@ import com.jogamp.opengl.GLCapabilities;
 import org.example.panels.MainPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
