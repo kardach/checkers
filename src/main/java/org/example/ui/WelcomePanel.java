@@ -6,34 +6,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class WelcomePanel extends PanelWrapper {
-public WelcomePanel(GameWindow gameWindow) {
+    public WelcomePanel(GameWindow gameWindow) {
         jPanel.setName("WELCOME");
         jPanel.setLayout(null);
         jPanel.add(new StartButton());
         jPanel.add(new ExitButton(gameWindow));
-        jPanel.add(new JComponent() {
-            @Override
-            public Dimension getMinimumSize() {
-                return new Dimension(100, 100);
-            }
-
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(400, 300);
-            }
-
-            @Override
-            public Dimension getMaximumSize() {
-                return new Dimension(800, 600);
-            }
-
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(Color.RED);
-                g.fillRect(300, 0, 200, 200);
-            }
-        });
     }
 
     static class StartButton extends JButton {
