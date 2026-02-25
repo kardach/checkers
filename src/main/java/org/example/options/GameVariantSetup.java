@@ -6,10 +6,10 @@ import static java.util.Map.entry;
 
 public class GameVariantSetup {
     private final Map<String, Variant> variants = Map.ofEntries(
-            entry("International/Polish", new Variant(10, 20, true,
-                    Variant.PiecesPlacement.ON_BLACK, Variant.FirstMove.WHITE)),
-            entry("Ghanaian/damii", new Variant(10, 20, false,
-                    Variant.PiecesPlacement.ON_WHITE, Variant.FirstMove.BLACK))
+            entry("International/Polish", new Variant("International/Polish", 10,
+                    20, true, Variant.PiecesPlacement.ON_BLACK, Variant.FirstMove.WHITE)),
+            entry("Ghanaian/damii", new Variant("Ghanaian/damii", 10, 20,
+                    false, Variant.PiecesPlacement.ON_WHITE, Variant.FirstMove.BLACK))
     );
     private String selected;
 
