@@ -1,4 +1,4 @@
-package org.example.variants;
+package org.example.options;
 
 import java.util.Map;
 
