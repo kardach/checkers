@@ -1,30 +1,24 @@
 package org.example;
 
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.GLCapabilities;
-import org.example.panels.GameplayPanel;
-import org.example.panels.MainPanel;
-import org.example.panels.NewGamePanel;
-import org.example.panels.WelcomePanel;
-import org.example.variants.GameVariantSetup;
+import org.example.ui.GameWindow;
+import org.example.ui.GameplayPanel;
+import org.example.ui.NewGamePanel;
+import org.example.ui.WelcomePanel;
+import org.example.options.GameVariantSetup;
 
 public class Main {
     static void main() {
-        GLProfile glProfile = GLProfile.getDefault();
-        GLCapabilities glCapabilities = new GLCapabilities(glProfile);
         GameVariantSetup gameVariantSetup = new GameVariantSetup();
-        GameWindow gameWindow = new GameWindow(glCapabilities);
+        GameWindow gameWindow = new GameWindow();
 
-        MainPanel mainPanel = new MainPanel();
         WelcomePanel welcomePanel = new WelcomePanel(gameWindow);
         NewGamePanel newGamePanel = new NewGamePanel(gameVariantSetup);
-        GameplayPanel gameplayPanel = new GameplayPanel(glCapabilities, gameVariantSetup);
+        GameplayPanel gameplayPanel = new GameplayPanel(gameVariantSetup);
+//;
 
-        mainPanel.add(welcomePanel);
-        mainPanel.add(newGamePanel);
-        mainPanel.add(gameplayPanel);
-
-        gameWindow.add(mainPanel);
-        gameWindow.setVisible(true);
+        gameWindow.add(welcomePanel);
+        gameWindow.add(newGamePanel);
+        gameWindow.add(gameplayPanel);
+        gameWindow.display();
     }
 }

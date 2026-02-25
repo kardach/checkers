@@ -1,6 +1,6 @@
-package org.example.panels;
+package org.example.ui;
 
-import org.example.variants.GameVariantSetup;
+import org.example.options.GameVariantSetup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,31 +8,18 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class NewGamePanel {
-    private final JPanel jPanel;
-    private static MainPanel parent;
-    private static CardLayout cardLayout;
+public class NewGamePanel extends PanelWrapper {
     private final GameVariantSetup gameVariantSetup;
 
     public NewGamePanel(GameVariantSetup gameVariantSetup) {
         this.gameVariantSetup = gameVariantSetup;
         gameVariantSetup.select(gameVariantSetup.getVariantNames()[0]);
 
-        jPanel = new JPanel();
         jPanel.setName("NEW_GAME");
         jPanel.setLayout(null);
         jPanel.add(new VariantComboBox());
         jPanel.add(new PlayButton());
         jPanel.add(new CancelButton());
-    }
-
-    public JPanel getJPanel() {
-        return jPanel;
-    }
-
-    void setParent(MainPanel mainPanel) {
-        parent = mainPanel;
-        cardLayout = parent.getLayout();
     }
 
     class VariantComboBox extends JComboBox<String> {
@@ -63,7 +50,7 @@ public class NewGamePanel {
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    cardLayout.next(parent.getJPanel());
+                    cardLayout.next(parent);
                 }
 
                 @Override
@@ -91,7 +78,7 @@ public class NewGamePanel {
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    cardLayout.previous(parent.getJPanel());
+                    cardLayout.previous(parent);
                 }
 
                 @Override
