@@ -14,7 +14,6 @@ public class Main {
         WelcomePanel welcomePanel = new WelcomePanel(gameWindow);
         NewGamePanel newGamePanel = new NewGamePanel(gameVariantSetup);
         GameplayPanel gameplayPanel = new GameplayPanel(gameVariantSetup);
-//;
 
         gameWindow.add(welcomePanel);
         gameWindow.add(newGamePanel);
