@@ -1,32 +1,39 @@
-package org.example.panels;
-
-import org.example.GameWindow;
+package org.example.ui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class WelcomePanel {
-    private final JPanel jPanel;
-    private static MainPanel parent;
-    private static CardLayout cardLayout;
-
-    public WelcomePanel(GameWindow gameWindow) {
-        jPanel = new JPanel();
+public class WelcomePanel extends PanelWrapper {
+public WelcomePanel(GameWindow gameWindow) {
         jPanel.setName("WELCOME");
         jPanel.setLayout(null);
         jPanel.add(new StartButton());
         jPanel.add(new ExitButton(gameWindow));
-    }
+        jPanel.add(new JComponent() {
+            @Override
+            public Dimension getMinimumSize() {
+                return new Dimension(100, 100);
+            }
 
-    public JPanel getJPanel() {
-        return jPanel;
-    }
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(400, 300);
+            }
 
-    void setParent(MainPanel mainPanel) {
-        parent = mainPanel;
-        cardLayout = parent.getLayout();
+            @Override
+            public Dimension getMaximumSize() {
+                return new Dimension(800, 600);
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(Color.RED);
+                g.fillRect(300, 0, 200, 200);
+            }
+        });
     }
 
     static class StartButton extends JButton {
@@ -44,7 +51,7 @@ public class WelcomePanel {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if(cardLayout != null) {
-                        cardLayout.next(parent.getJPanel());
+                        cardLayout.next(parent);
                     }
                 }
 
