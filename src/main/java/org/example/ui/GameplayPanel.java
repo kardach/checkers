@@ -12,12 +12,11 @@ import java.awt.event.MouseListener;
 
 public class GameplayPanel extends PanelWrapper {
     private static VariantLabel variantLabel;
-    private static boolean becameVisible;
-    private Game game;
+    private static Game game;
+    private static BoardPanel boardPanel;
 
     public GameplayPanel(GameVariantSetup gameVariantSetup) {
         variantLabel = new VariantLabel();
-        becameVisible = false;
         jPanel.setName("GAMEPLAY");
         jPanel.setLayout(null);
         jPanel.addComponentListener(new ComponentListener() {
@@ -30,7 +29,10 @@ public class GameplayPanel extends PanelWrapper {
 
             @Override
             public void componentResized(ComponentEvent e) {
-
+                int size = Math.min(jPanel.getSize().width - 200, jPanel.getSize().height);
+                if(boardPanel != null) {
+                    boardPanel.setSize(size);
+                };
             }
 
             @Override
@@ -40,47 +42,26 @@ public class GameplayPanel extends PanelWrapper {
 
             @Override
             public void componentShown(ComponentEvent e) {
-                if(!becameVisible) {
-                    becameVisible = true;
-                    variantLabel.setText(gameVariantSetup.getSelected());
-                    game = new Game(gameVariantSetup.getSelectedVariant());
-                }
+                int size = Math.min(jPanel.getSize().width - 200, jPanel.getSize().height);
+                game = new Game(gameVariantSetup.getSelectedVariant());
+                boardPanel = new BoardPanel(game.getBoard(), size);
+                jPanel.add(boardPanel);
+                variantLabel.setText(gameVariantSetup.getSelected());
             }
 
             @Override
             public void componentHidden(ComponentEvent e) {
-                becameVisible = false;
+
             }
         }.init(gameVariantSetup));
         jPanel.add(new QuitButton());
+        jPanel.add(new ConfirmMoveButton());
         jPanel.add(variantLabel);
-        jPanel.add(new JComponent() {
-            @Override
-            public Dimension getMinimumSize() {
-                return new Dimension(100, 100);
-            }
-
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(400, 300);
-            }
-
-            @Override
-            public Dimension getMaximumSize() {
-                return new Dimension(800, 600);
-            }
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(Color.RED);
-                g.fillRect(300, 0, 200, 200);
-            }
-        });
     }
 
     static class VariantLabel extends JLabel {
         public VariantLabel() {
-            setBounds(0, 200, 200, 50);
+            setBounds(0, 100, 200, 50);
             setFont(new Font("Dialog", Font.BOLD, 18));
             setBackground(Color.WHITE);
         }
@@ -109,6 +90,14 @@ public class GameplayPanel extends PanelWrapper {
                 @Override
                 public void mouseExited(MouseEvent e) {}
             });
+        }
+    }
+
+    static class ConfirmMoveButton extends JButton {
+        public ConfirmMoveButton() {
+            setText("Confirm move");
+            setBounds(0, 200, 200, 50);
+            setFont(new Font("Dialog", Font.BOLD, 18));
         }
     }
 }
