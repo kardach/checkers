@@ -4,12 +4,15 @@ import org.example.model.Board;
 import org.example.model.Square;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 class BoardPanel extends JPanel {
     private Board board;
     private int size;
-    private SquareView[][]  squareViews;
+    private SquareView[][] squareViews;
 
     public BoardPanel(Board board, int size) {
         this.board = board;
@@ -18,53 +21,110 @@ class BoardPanel extends JPanel {
 
         setBounds(200, 0, size, size);
         setLayout(new GridLayout(0, 10));
-        SquareView.setSize(squareSize);
 
         squareViews = new SquareView[boardSize][boardSize];
         for(int row = 0; row < boardSize; row++) {
             for(int col = 0; col < boardSize; col++) {
                 squareViews[row][col] = new SquareView(board.at(row, col));
                 squareViews[row][col].setPosition(row * squareSize, col * squareSize);
-                add(squareViews[row][col].jComponent);
+                squareViews[row][col].setSize(squareSize);
+                add(squareViews[row][col].jButton);
             }
         }
     }
 
     public void setSize(int size) {
         this.size = size;
+        int boardSize = board.getSize();
+        int squareSize = size / boardSize;
+        for(int row = 0; row < boardSize; row++) {
+            for(int col = 0; col < boardSize; col++) {
+                squareViews[row][col].setSize(squareSize);
+            }
+        }
+        System.out.println(size);
+        revalidate();
+        repaint();
+    }
+
+    static class SquareButtonUI extends BasicButtonUI {
+        private Color selectColor;
+
+        public void setSelectColor(Color selectColor) {
+            this.selectColor = selectColor;
+        }
+
+        public Color getSelectColor() {
+            return selectColor;
+        }
+
+        @Override
+        protected void paintButtonPressed(Graphics g, AbstractButton b) {
+            super.paintButtonPressed(g, b);
+            if(b.isContentAreaFilled()) {
+                Dimension size = b.getSize();
+                g.setColor(getSelectColor());
+                g.fillRect(0, 0, size.width, size.height);
+            }
+        }
     }
 
     static class SquareView {
-        private static int size;
+        private int size;
         private int x;
         private int y;
-        private final Color color;
-        private final JComponent jComponent;
         private final JButton jButton;
         private Square square;
 
         public SquareView(Square square) {
             this.square = square;
+            Color color;
             if(square.getColor() == Square.Color.BLACK) {
                 color = Color.BLACK;
             } else {
                 color = Color.WHITE;
             }
-            jComponent = new JComponent() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    g.setColor(color);
-                    g.fillRect(0, 0, size, size);
-                }
-            };
-            jComponent.setBounds(x, y, size, size);
-            jButton = new JButton(x+""+y);
+            jButton = new JButton();
+            SquareButtonUI ui = new SquareButtonUI();
+            ui.setSelectColor(color);
+            jButton.setUI(ui);
+            jButton.setBackground(color);
+            jButton.setBorderPainted(false);
+            jButton.setMargin(new Insets(0, 0, 0, 0));
+            jButton.setRolloverEnabled(false);
             jButton.setBounds(x, y, size, size);
+            jButton.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
         }
 
-        public static void setSize(int size) {
-            SquareView.size = size;
+        public void setSize(int size) {
+            this.size = size;
+            jButton.revalidate();
+            jButton.repaint();
         }
 
         public void setPosition(int x, int y) {
