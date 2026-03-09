@@ -1,6 +1,7 @@
 package org.example.ui;
 
 import org.example.model.Board;
+import org.example.model.Piece;
 import org.example.model.Square;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Optional;
 
 class BoardPanel extends JPanel {
     private Board board;
@@ -26,36 +28,63 @@ class BoardPanel extends JPanel {
         for(int row = 0; row < boardSize; row++) {
             for(int col = 0; col < boardSize; col++) {
                 squareViews[row][col] = new SquareView(board.at(row, col));
-                squareViews[row][col].setPosition(row * squareSize, col * squareSize);
-                squareViews[row][col].setSize(squareSize);
                 add(squareViews[row][col].jButton);
             }
         }
     }
 
-    public void setSize(int size) {
-        this.size = size;
-        int boardSize = board.getSize();
-        int squareSize = size / boardSize;
-        for(int row = 0; row < boardSize; row++) {
-            for(int col = 0; col < boardSize; col++) {
-                squareViews[row][col].setSize(squareSize);
+    static class SquareButtonUI extends BasicButtonUI {
+        private Square square;
+        private Optional<Piece> piece;
+
+        public void setSquare(Square square) {
+            this.square = square;
+        }
+
+        public Square getSquare() {
+            return square;
+        }
+
+        public void setPiece(Optional<Piece> piece) {
+            this.piece = piece;
+        }
+
+        public Optional<Piece> getPiece() {
+            return piece;
+        }
+
+        private void paint(Graphics g, Dimension size) {
+            Color squareColor;
+
+            if(getSquare().getColor() == Square.Color.BLACK) {
+                squareColor = Color.BLACK;
+            } else {
+                squareColor = Color.WHITE;
+            }
+
+            g.setColor(squareColor);
+            g.fillRect(0, 0, size.width, size.height);
+
+            if(getPiece().isPresent()) {
+                Piece piece = getPiece().get();
+                Color pieceColor;
+
+                if(piece.getColor() == Piece.Color.BLACK) {
+                    pieceColor = Color.BLACK;
+                } else {
+                    pieceColor = Color.WHITE;
+                }
+
+                g.setColor(pieceColor);
+                g.fillOval(0, 0, size.width, size.height);
             }
         }
-        System.out.println(size);
-        revalidate();
-        repaint();
-    }
 
-    static class SquareButtonUI extends BasicButtonUI {
-        private Color selectColor;
-
-        public void setSelectColor(Color selectColor) {
-            this.selectColor = selectColor;
-        }
-
-        public Color getSelectColor() {
-            return selectColor;
+        @Override
+        public void paint(Graphics g, JComponent c) {
+            super.paint(g, c);
+            Dimension size = c.getSize();
+            paint(g, size);
         }
 
         @Override
@@ -63,8 +92,7 @@ class BoardPanel extends JPanel {
             super.paintButtonPressed(g, b);
             if(b.isContentAreaFilled()) {
                 Dimension size = b.getSize();
-                g.setColor(getSelectColor());
-                g.fillRect(0, 0, size.width, size.height);
+                paint(g, size);
             }
         }
     }
@@ -78,17 +106,11 @@ class BoardPanel extends JPanel {
 
         public SquareView(Square square) {
             this.square = square;
-            Color color;
-            if(square.getColor() == Square.Color.BLACK) {
-                color = Color.BLACK;
-            } else {
-                color = Color.WHITE;
-            }
             jButton = new JButton();
             SquareButtonUI ui = new SquareButtonUI();
-            ui.setSelectColor(color);
+            ui.setSquare(square);
+            ui.setPiece(square.getPiece());
             jButton.setUI(ui);
-            jButton.setBackground(color);
             jButton.setBorderPainted(false);
             jButton.setMargin(new Insets(0, 0, 0, 0));
             jButton.setRolloverEnabled(false);
@@ -119,17 +141,6 @@ class BoardPanel extends JPanel {
 
                 }
             });
-        }
-
-        public void setSize(int size) {
-            this.size = size;
-            jButton.revalidate();
-            jButton.repaint();
-        }
-
-        public void setPosition(int x, int y) {
-            this.x = x;
-            this.y = y;
         }
     }
 }

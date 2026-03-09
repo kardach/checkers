@@ -30,9 +30,9 @@ public class GameplayPanel extends PanelWrapper {
             @Override
             public void componentResized(ComponentEvent e) {
                 int size = Math.min(jPanel.getSize().width - 200, jPanel.getSize().height);
-                if(boardPanel != null) {
-                    boardPanel.setSize(size);
-                };
+//                if(boardPanel != null) {
+//                    boardPanel.setSize(size);
+//                };
             }
 
             @Override

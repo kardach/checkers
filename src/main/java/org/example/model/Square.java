@@ -25,6 +25,10 @@ public class Square {
         return color;
     }
 
+    public Optional<Piece> getPiece() {
+        return piece;
+    }
+
     public Optional<Piece> removePiece() {
         Optional<Piece> temp = piece;
         piece = Optional.empty();
