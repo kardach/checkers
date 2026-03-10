@@ -57,9 +57,9 @@ class BoardPanel extends JPanel {
             Color squareColor;
 
             if(getSquare().getColor() == Square.Color.BLACK) {
-                squareColor = Color.BLACK;
+                squareColor = new Color(139, 69, 19);
             } else {
-                squareColor = Color.WHITE;
+                squareColor = new Color(255, 228, 196);
             }
 
             g.setColor(squareColor);
