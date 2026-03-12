@@ -1,7 +1,5 @@
 package org.example.model;
 
-import java.util.Optional;
-
 public class Square {
     public enum Color {
         BLACK,
@@ -9,33 +7,36 @@ public class Square {
     }
 
     private final Color color;
-    private Optional<Piece> piece;
+    private Piece piece;
+
+    public Square(Color color) {
+        this(color, null);
+    }
 
     public Square(Color color, Piece piece) {
         this.color = color;
-        this.piece = Optional.of(piece);
-    }
-
-    public Square(Color color) {
-        this.color = color;
-        piece = Optional.empty();
+        this.piece = piece;
     }
 
     public Color getColor() {
         return color;
     }
 
-    public Optional<Piece> getPiece() {
+    public boolean hasPiece() {
+        return piece != null;
+    }
+
+    public Piece getPiece() {
         return piece;
     }
 
-    public Optional<Piece> removePiece() {
-        Optional<Piece> temp = piece;
-        piece = Optional.empty();
+    public Piece removePiece() {
+        Piece temp = piece;
+        piece = null;
         return temp;
     }
 
     public void placePiece(Piece piece) {
-        this.piece = Optional.of(piece);
+        this.piece = piece;
     }
 }

@@ -9,7 +9,6 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Optional;
 
 class BoardPanel extends JPanel {
     private Board board;
@@ -35,7 +34,6 @@ class BoardPanel extends JPanel {
 
     static class SquareButtonUI extends BasicButtonUI {
         private Square square;
-        private Optional<Piece> piece;
 
         public void setSquare(Square square) {
             this.square = square;
@@ -45,35 +43,16 @@ class BoardPanel extends JPanel {
             return square;
         }
 
-        public void setPiece(Optional<Piece> piece) {
-            this.piece = piece;
-        }
-
-        public Optional<Piece> getPiece() {
-            return piece;
-        }
-
         private void paint(Graphics g, Dimension size) {
-            Color squareColor;
-
-            if(getSquare().getColor() == Square.Color.BLACK) {
-                squareColor = new Color(139, 69, 19);
-            } else {
-                squareColor = new Color(255, 228, 196);
-            }
+            Color squareColor = getSquare().getColor() == Square.Color.BLACK ? new Color(139, 69, 19)
+                    : new Color(255, 228, 196);
 
             g.setColor(squareColor);
             g.fillRect(0, 0, size.width, size.height);
 
-            if(getPiece().isPresent()) {
-                Piece piece = getPiece().get();
-                Color pieceColor;
-
-                if(piece.getColor() == Piece.Color.BLACK) {
-                    pieceColor = Color.BLACK;
-                } else {
-                    pieceColor = Color.WHITE;
-                }
+            if(square.hasPiece()) {
+                Piece piece = square.getPiece();
+                Color pieceColor = piece.getColor() == Piece.Color.BLACK ? Color.BLACK : Color.WHITE;
 
                 g.setColor(pieceColor);
                 g.fillOval(0, 0, size.width, size.height);
@@ -109,7 +88,6 @@ class BoardPanel extends JPanel {
             jButton = new JButton();
             SquareButtonUI ui = new SquareButtonUI();
             ui.setSquare(square);
-            ui.setPiece(square.getPiece());
             jButton.setUI(ui);
             jButton.setBorderPainted(false);
             jButton.setMargin(new Insets(0, 0, 0, 0));

@@ -51,7 +51,12 @@ public class GameplayPanel extends PanelWrapper {
 
             @Override
             public void componentHidden(ComponentEvent e) {
-
+                if(boardPanel != null) {
+                    jPanel.remove(boardPanel);
+                }
+                game = null;
+                boardPanel = null;
+                variantLabel.setText("");
             }
         }.init(gameVariantSetup));
         jPanel.add(new QuitButton());
