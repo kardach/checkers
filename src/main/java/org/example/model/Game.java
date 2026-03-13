@@ -25,7 +25,6 @@ public class Game {
         for(int i = 0; i < piecesPerSide; i++) {
             board.at(row, col).placePiece(new Piece(Piece.Color.WHITE));
             board.at(boardSize - row - 1, boardSize - col - 1).placePiece(new Piece(Piece.Color.BLACK));
-            System.out.println(row + " " + col);
             col += 2;
             if(col >= boardSize) {
                 row += 1;

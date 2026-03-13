@@ -30,10 +30,6 @@ public class Board {
         return size;
     }
 
-    public Square[][] getSquares() {
-        return squares;
-    }
-
     public Square at(int row, int col) {
         return squares[row][col];
     }

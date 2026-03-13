@@ -11,23 +11,57 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 class BoardPanel extends JPanel {
-    private Board board;
-    private int size;
-    private SquareView[][] squareViews;
-
     public BoardPanel(Board board, int size) {
-        this.board = board;
         int boardSize = board.getSize();
-        int squareSize = size / boardSize;
 
         setBounds(200, 0, size, size);
-        setLayout(new GridLayout(0, 10));
+        setLayout(new GridLayout(boardSize, boardSize));
 
-        squareViews = new SquareView[boardSize][boardSize];
         for(int row = 0; row < boardSize; row++) {
             for(int col = 0; col < boardSize; col++) {
-                squareViews[row][col] = new SquareView(board.at(row, col));
-                add(squareViews[row][col].jButton);
+                JButton jButton = new JButton();
+                SquareButtonUI ui = new SquareButtonUI();
+                ui.setSquare(board.at(row, col));
+                jButton.setUI(ui);
+                jButton.setBorderPainted(false);
+                jButton.setMargin(new Insets(0, 0, 0, 0));
+                jButton.setRolloverEnabled(false);
+                jButton.addMouseListener(new MouseListener() {
+                    private int row;
+                    private int col;
+
+                    private MouseListener init(int row, int col) {
+                        this.row = row;
+                        this.col = col;
+                        return this;
+                    }
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        System.out.println("row = " + row +", col = " + col);
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+
+                    }
+                }.init(row, col));
+                add(jButton);
             }
         }
     }
@@ -73,52 +107,6 @@ class BoardPanel extends JPanel {
                 Dimension size = b.getSize();
                 paint(g, size);
             }
-        }
-    }
-
-    static class SquareView {
-        private int size;
-        private int x;
-        private int y;
-        private final JButton jButton;
-        private Square square;
-
-        public SquareView(Square square) {
-            this.square = square;
-            jButton = new JButton();
-            SquareButtonUI ui = new SquareButtonUI();
-            ui.setSquare(square);
-            jButton.setUI(ui);
-            jButton.setBorderPainted(false);
-            jButton.setMargin(new Insets(0, 0, 0, 0));
-            jButton.setRolloverEnabled(false);
-            jButton.setBounds(x, y, size, size);
-            jButton.addMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
-                }
-            });
         }
     }
 }
