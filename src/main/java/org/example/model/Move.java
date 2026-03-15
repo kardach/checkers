@@ -11,9 +11,9 @@ public class Move {
         subMoves = new ArrayList<>();
     }
 
-    public void add(int x, int y) {
+    public void add(int row, int col) {
         if(start == null) {
-            start = new Position(x, y);
+            start = new Position(row, col);
         } else {
             Position lastPosition;
             if(subMoves.isEmpty()) {
@@ -21,7 +21,7 @@ public class Move {
             } else {
                 lastPosition = subMoves.getLast().to;
             }
-            subMoves.add(new SubMove(lastPosition, new Position(x, y)));
+            subMoves.add(new SubMove(lastPosition, new Position(row, col)));
         }
     }
 
@@ -34,11 +34,11 @@ public class Move {
         return subMoves.isEmpty();
     }
 
-    List<SubMove> getSubMoves() {
+    public List<SubMove> getSubMoves() {
         return subMoves;
     }
 
-    record Position(int x, int y) {}
+    public record Position(int row, int col) {}
 
-    record SubMove(Position from, Position to) {}
+    public record SubMove(Position from, Position to) {}
 }

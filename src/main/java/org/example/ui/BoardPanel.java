@@ -10,16 +10,23 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 class BoardPanel extends JPanel {
     private JButton selectedSquare;
+    private final Move move;
+    private final int squareSize;
+    private JButton[][] jButtons;
 
     public BoardPanel(Board board, Move move, int size) {
+        this.move = move;
         int boardSize = board.getSize();
+        squareSize = size / boardSize;
 
         setBounds(200, 0, size, size);
         setLayout(new GridLayout(boardSize, boardSize));
 
+        jButtons = new JButton[boardSize][boardSize];
         for(int row = 0; row < boardSize; row++) {
             for(int col = 0; col < boardSize; col++) {
                 JButton jButton = new JButton();
@@ -30,12 +37,14 @@ class BoardPanel extends JPanel {
                 jButton.setMargin(new Insets(0, 0, 0, 0));
                 jButton.setRolloverEnabled(false);
                 jButton.addMouseListener(new MouseListener() {
+                    private JPanel boardPanel;
                     private JButton jButton;
                     private Move move;
                     private int row;
                     private int col;
 
-                    private MouseListener init(JButton jButton, Move move, int row, int col) {
+                    private MouseListener init(JPanel boardPanel, JButton jButton, Move move, int row, int col) {
+                        this.boardPanel = boardPanel;
                         this.jButton = jButton;
                         this.move = move;
                         this.row = row;
@@ -78,8 +87,9 @@ class BoardPanel extends JPanel {
                     public void mouseExited(MouseEvent e) {
 
                     }
-                }.init(jButton, move, row, col));
+                }.init(this, jButton, move, row, col));
                 add(jButton);
+                jButtons[row][col] = jButton;
             }
         }
     }
@@ -94,7 +104,61 @@ class BoardPanel extends JPanel {
         }
     }
 
-    static class SquareButtonUI extends BasicButtonUI {
+    public void paintArrow(Graphics2D g, Move.SubMove subMove) {
+        Rectangle fromSquare = jButtons[subMove.from().row()][subMove.from().col()].getBounds();
+        Rectangle toSquare = jButtons[subMove.to().row()][subMove.to().col()].getBounds();
+        int fromX = fromSquare.x + fromSquare.width / 2;
+        int fromY = fromSquare.y + fromSquare.height / 2;
+        int toX = toSquare.x + toSquare.width / 2;
+        int toY = toSquare.y + toSquare.height / 2;
+        int deltaX = toX - fromX;
+        int deltaY = toY - fromY;
+        int adjustRectangle = fromSquare.width / 3;
+        int adjustTriangle = fromSquare.width / 2;
+        int dirX = 0;
+        int dirY = 0;
+
+        if(deltaX > 0 && deltaY > 0) {
+            dirX = 1;
+            dirY = 1;
+        } else if(deltaX < 0 && deltaY > 0) {
+            dirX = -1;
+            dirY = 1;
+        } else if(deltaX > 0 && deltaY < 0) {
+            dirX = 1;
+            dirY = -1;
+        } else if(deltaX < 0 && deltaY < 0) {
+            dirX = -1;
+            dirY = -1;
+        }
+        {
+            int[] xPoints = {fromX + adjustRectangle * dirX, toX - adjustRectangle / 2 * dirX, 
+                    toX - adjustRectangle * dirX, fromX + adjustRectangle / 2 * dirX};
+            int[] yPoints = {fromY + adjustRectangle / 2 * dirY, toY - adjustRectangle * dirY, 
+                    toY - adjustRectangle / 2 * dirY, fromY + adjustRectangle * dirY};
+            g.fillPolygon(xPoints, yPoints, 4);
+        }
+        {
+            int[] xPoints = {toX - adjustTriangle / 4 * dirX, toX, toX - adjustTriangle * dirX};
+            int[] yPoints = {toY - adjustTriangle * dirY, toY, toY - adjustTriangle / 4 * dirY};
+            g.fillPolygon(xPoints, yPoints, 3);
+        }
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if(!move.isEmpty()) {
+            Graphics2D g2D = (Graphics2D) g;
+            g2D.setColor(new Color(255, 127, 0));
+            List<Move.SubMove> subMoves = move.getSubMoves();
+            for(Move.SubMove subMove : subMoves) {
+                paintArrow(g2D, subMove);
+            }
+        }
+    }
+
+    class SquareButtonUI extends BasicButtonUI {
         private Square square;
         private boolean selected;
 
@@ -111,10 +175,14 @@ class BoardPanel extends JPanel {
         }
 
         private void paint(Graphics g, Dimension size) {
-            Color squareColor = getSquare().getColor() == Square.Color.BLACK ? new Color(139, 69, 19)
-                    : new Color(255, 228, 196);
+            Color squareColor;
+            getBounds();
             if(selected) {
                 squareColor = Color.GREEN;
+            } else if(getSquare().getColor() == Square.Color.BLACK) {
+                squareColor = new Color(139, 69, 19);
+            } else {
+                squareColor = new Color(255, 228, 196);
             }
             g.setColor(squareColor);
             g.fillRect(0, 0, size.width, size.height);
@@ -127,12 +195,8 @@ class BoardPanel extends JPanel {
                 g.fillOval(0, 0, size.width, size.height);
             }
 
-//            if(selected) {
-//                Graphics2D g2 = (Graphics2D) g;
-//                g2.rotate(Math.toRadians(45));
-//                g2.setColor(new Color(255, 0, 0, 128));
-//                g2.fillRect(0, 0, 100, 10);
-//            }
+            BoardPanel.this.revalidate();
+            BoardPanel.this.repaint();
         }
 
         @Override

@@ -35,6 +35,6 @@ public class Board {
     }
 
     Square at(Move.Position position) {
-        return squares[position.x()][position.y()];
+        return squares[position.row()][position.col()];
     }
 }
