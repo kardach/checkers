@@ -2,6 +2,8 @@ package org.example.model;
 
 import org.example.options.Variant;
 
+import java.util.List;
+
 public class Game {
     private final String variantName;
     private final Board board;
@@ -39,5 +41,19 @@ public class Game {
 
     public Board getBoard() {
         return board;
+    }
+
+    public Move getMove() {
+        return move;
+    }
+
+    public void performMove() {
+        List<Move.SubMove> subMoves = move.getSubMoves();
+        for(Move.SubMove subMove : subMoves) {
+            System.out.println(subMove);
+        }
+        move.clear();
+//        Piece piece = board.at(subMoves.getFirst().from()).removePiece();
+//        board.at(subMoves.getLast().to()).placePiece(piece);
     }
 }

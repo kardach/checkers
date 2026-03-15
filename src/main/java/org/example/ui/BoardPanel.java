@@ -55,13 +55,8 @@ class BoardPanel extends JPanel {
 
                     @Override
                     public void mouseReleased(MouseEvent e) {
-
                         System.out.println("row = " + row +", col = " + col);
-                        if(move.isEmpty()) {
-                            move.begin(row, col);
-                        } else {
-                            move.add(row, col);
-                        }
+                        move.add(row, col);
 
                         if(selectedSquare != null) {
                             SquareButtonUI ui = (SquareButtonUI) selectedSquare.getUI();
@@ -86,6 +81,16 @@ class BoardPanel extends JPanel {
                 }.init(jButton, move, row, col));
                 add(jButton);
             }
+        }
+    }
+
+    public void clearSelection() {
+        if(selectedSquare != null) {
+            SquareButtonUI ui = (SquareButtonUI) selectedSquare.getUI();
+            ui.setSelected(false);
+            selectedSquare.revalidate();
+            selectedSquare.repaint();
+            selectedSquare = null;
         }
     }
 

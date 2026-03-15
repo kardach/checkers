@@ -4,29 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Move {
-    private List<SubMove> subMoves;
+    private final List<SubMove> subMoves;
     private Position start;
 
     public Move() {
         subMoves = new ArrayList<>();
     }
 
-    public void begin(int x, int y) {
-        start = new Position(x, y);
-    }
-
     public void add(int x, int y) {
-        Position lastPosition;
-        if(subMoves.isEmpty()) {
-            lastPosition = start;
+        if(start == null) {
+            start = new Position(x, y);
         } else {
-            lastPosition = subMoves.getLast().to;
+            Position lastPosition;
+            if(subMoves.isEmpty()) {
+                lastPosition = start;
+            } else {
+                lastPosition = subMoves.getLast().to;
+            }
+            subMoves.add(new SubMove(lastPosition, new Position(x, y)));
         }
-        subMoves.add(new SubMove(lastPosition, new Position(x, y)));
     }
 
     public void clear() {
+        start = null;
         subMoves.clear();
+    }
+
+    public boolean isEmpty() {
+        return subMoves.isEmpty();
+    }
+
+    List<SubMove> getSubMoves() {
+        return subMoves;
     }
 
     record Position(int x, int y) {}

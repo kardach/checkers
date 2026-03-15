@@ -44,7 +44,7 @@ public class GameplayPanel extends PanelWrapper {
             public void componentShown(ComponentEvent e) {
                 int size = Math.min(jPanel.getSize().width - 200, jPanel.getSize().height);
                 game = new Game(gameVariantSetup.getSelectedVariant());
-                boardPanel = new BoardPanel(game.getBoard(), size);
+                boardPanel = new BoardPanel(game.getBoard(), game.getMove(), size);
                 jPanel.add(boardPanel);
                 variantLabel.setText(gameVariantSetup.getSelected());
             }
@@ -103,6 +103,33 @@ public class GameplayPanel extends PanelWrapper {
             setText("Confirm move");
             setBounds(0, 200, 200, 50);
             setFont(new Font("Dialog", Font.BOLD, 18));
+            addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    game.performMove();
+                    boardPanel.clearSelection();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
         }
     }
 }
