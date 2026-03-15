@@ -15,13 +15,11 @@ import java.util.List;
 class BoardPanel extends JPanel {
     private JButton selectedSquare;
     private final Move move;
-    private final int squareSize;
-    private JButton[][] jButtons;
+    private final JButton[][] jButtons;
 
     public BoardPanel(Board board, Move move, int size) {
         this.move = move;
         int boardSize = board.getSize();
-        squareSize = size / boardSize;
 
         setBounds(200, 0, size, size);
         setLayout(new GridLayout(boardSize, boardSize));
@@ -37,14 +35,12 @@ class BoardPanel extends JPanel {
                 jButton.setMargin(new Insets(0, 0, 0, 0));
                 jButton.setRolloverEnabled(false);
                 jButton.addMouseListener(new MouseListener() {
-                    private JPanel boardPanel;
                     private JButton jButton;
                     private Move move;
                     private int row;
                     private int col;
 
-                    private MouseListener init(JPanel boardPanel, JButton jButton, Move move, int row, int col) {
-                        this.boardPanel = boardPanel;
+                    private MouseListener init(JButton jButton, Move move, int row, int col) {
                         this.jButton = jButton;
                         this.move = move;
                         this.row = row;
@@ -87,7 +83,7 @@ class BoardPanel extends JPanel {
                     public void mouseExited(MouseEvent e) {
 
                     }
-                }.init(this, jButton, move, row, col));
+                }.init(jButton, move, row, col));
                 add(jButton);
                 jButtons[row][col] = jButton;
             }
@@ -149,11 +145,12 @@ class BoardPanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         if(!move.isEmpty()) {
-            Graphics2D g2D = (Graphics2D) g;
-            g2D.setColor(new Color(255, 127, 0));
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(new Color(255, 127, 0));
             List<Move.SubMove> subMoves = move.getSubMoves();
             for(Move.SubMove subMove : subMoves) {
-                paintArrow(g2D, subMove);
+                paintArrow(g2, subMove);
             }
         }
     }
@@ -174,9 +171,42 @@ class BoardPanel extends JPanel {
             this.selected = selected;
         }
 
+        private void paintMan(Graphics2D g2, Dimension size) {
+            Piece piece = square.getPiece();
+            Color pieceColor = piece.getColor() == Piece.Color.BLACK ? Color.BLACK : Color.WHITE;
+            Color pieceBorderColor = piece.getColor() == Piece.Color.BLACK ? Color.WHITE : Color.BLACK;
+
+            int borderThickness = (size.height + 5) / 20;
+
+            g2.setColor(pieceBorderColor);
+            g2.fillArc(0, size.height * 3 / 8, size.width, size.height / 2, 0, -180);
+            g2.setColor(pieceColor);
+            g2.fillArc(borderThickness, size.height * 3 / 8 + borderThickness,
+                    size.width -  2 * borderThickness, size.height / 2 - 2 * borderThickness,
+                    0, -180);
+
+            g2.setColor(pieceBorderColor);
+            g2.fillRect(0, size.height * 3 / 8, size.width, size.height / 4 + 1);
+            g2.setColor(pieceColor);
+            g2.fillRect(borderThickness, size.height * 3 / 8, size.width - 2 * borderThickness,
+                    size.height / 4 + 2);
+
+            g2.setColor(pieceBorderColor);
+            g2.fillOval(0, size.height / 8, size.width, size.height / 2);
+            g2.setColor(pieceColor);
+            g2.fillOval(borderThickness, size.height / 8 + borderThickness,
+                    size.width - 2 * borderThickness, size.height / 2 - 2 * borderThickness);
+        }
+
+        private void paintKing(Graphics2D g, Dimension size) {
+
+        }
+
         private void paint(Graphics g, Dimension size) {
             Color squareColor;
-            getBounds();
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
             if(selected) {
                 squareColor = Color.GREEN;
             } else if(getSquare().getColor() == Square.Color.BLACK) {
@@ -184,15 +214,15 @@ class BoardPanel extends JPanel {
             } else {
                 squareColor = new Color(255, 228, 196);
             }
-            g.setColor(squareColor);
-            g.fillRect(0, 0, size.width, size.height);
+            g2.setColor(squareColor);
+            g2.fillRect(0, 0, size.width, size.height);
 
             if(square.hasPiece()) {
-                Piece piece = square.getPiece();
-                Color pieceColor = piece.getColor() == Piece.Color.BLACK ? Color.BLACK : Color.WHITE;
-
-                g.setColor(pieceColor);
-                g.fillOval(0, 0, size.width, size.height);
+                if(square.getPiece().getType() == Piece.Type.MAN) {
+                    paintMan(g2, size);
+                } else {
+                    paintKing(g2, size);
+                }
             }
 
             BoardPanel.this.revalidate();
