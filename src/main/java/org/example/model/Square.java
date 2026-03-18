@@ -1,11 +1,6 @@
 package org.example.model;
 
 public class Square {
-    public enum Color {
-        BLACK,
-        WHITE,
-    }
-
     private final Color color;
     private Piece piece;
 

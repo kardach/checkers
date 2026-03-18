@@ -1,13 +1,11 @@
 package org.example.ui;
 
-import org.example.model.Board;
-import org.example.model.Move;
-import org.example.model.Piece;
-import org.example.model.Square;
+import org.example.model.*;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -17,8 +15,9 @@ class BoardPanel extends JPanel {
     private final Move move;
     private final JButton[][] jButtons;
 
-    public BoardPanel(Board board, Move move, int size) {
-        this.move = move;
+    public BoardPanel(Game game, int size) {
+        this.move = game.getMove();
+        Board board = game.getBoard();
         int boardSize = board.getSize();
 
         setBounds(200, 0, size, size);
@@ -61,17 +60,22 @@ class BoardPanel extends JPanel {
                     @Override
                     public void mouseReleased(MouseEvent e) {
                         System.out.println("row = " + row +", col = " + col);
-                        move.add(row, col);
 
-                        if(selectedSquare != null) {
+                        if(board.at(row, col).hasPiece() && !move.isStarted()
+                                && game.getTurn() == board.at(row,col).getPiece().getColor() || move.isStarted()) {
+                            move.add(row, col);
+
+                            if(selectedSquare != null) {
+                                SquareButtonUI ui = (SquareButtonUI) selectedSquare.getUI();
+                                ui.setSelected(false);
+                                selectedSquare.revalidate();
+                                selectedSquare.repaint();
+                            }
+
+                            selectedSquare = jButton;
                             SquareButtonUI ui = (SquareButtonUI) selectedSquare.getUI();
-                            ui.setSelected(false);
-                            selectedSquare.revalidate();
-                            selectedSquare.repaint();
+                            ui.setSelected(true);
                         }
-                        selectedSquare = jButton;
-                        SquareButtonUI ui = (SquareButtonUI) selectedSquare.getUI();
-                        ui.setSelected(true);
                     }
 
                     @Override
@@ -173,8 +177,8 @@ class BoardPanel extends JPanel {
 
         private void paintMan(Graphics2D g2, Dimension size) {
             Piece piece = square.getPiece();
-            Color pieceColor = piece.getColor() == Piece.Color.BLACK ? Color.BLACK : Color.WHITE;
-            Color pieceBorderColor = piece.getColor() == Piece.Color.BLACK ? Color.WHITE : Color.BLACK;
+            Color pieceColor = piece.getColor() == org.example.model.Color.BLACK ? Color.BLACK : Color.WHITE;
+            Color pieceBorderColor = piece.getColor() == org.example.model.Color.BLACK ? Color.WHITE : Color.BLACK;
 
             int borderThickness = (size.height + 5) / 20;
 
@@ -209,7 +213,7 @@ class BoardPanel extends JPanel {
 
             if(selected) {
                 squareColor = Color.GREEN;
-            } else if(getSquare().getColor() == Square.Color.BLACK) {
+            } else if(getSquare().getColor() == org.example.model.Color.BLACK) {
                 squareColor = new Color(139, 69, 19);
             } else {
                 squareColor = new Color(255, 228, 196);

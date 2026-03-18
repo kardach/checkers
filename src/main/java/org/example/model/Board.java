@@ -11,15 +11,15 @@ public class Board {
             for(int col = 0; col < size; col++) {
                 if(lightSquareOnNearRight) {
                     if((row + col) % 2 == 0) {
-                        squares[row][col] = new Square(Square.Color.WHITE);
+                        squares[row][col] = new Square(Color.WHITE);
                     } else {
-                        squares[row][col] = new Square(Square.Color.BLACK);
+                        squares[row][col] = new Square(Color.BLACK);
                     }
                 } else {
                     if((row + col) % 2 == 0) {
-                        squares[row][col] = new Square(Square.Color.BLACK);
+                        squares[row][col] = new Square(Color.BLACK);
                     } else {
-                        squares[row][col] = new Square(Square.Color.WHITE);
+                        squares[row][col] = new Square(Color.WHITE);
                     }
                 }
             }
@@ -34,7 +34,7 @@ public class Board {
         return squares[row][col];
     }
 
-    Square at(Move.Position position) {
+    public Square at(Move.Position position) {
         return squares[position.row()][position.col()];
     }
 }

@@ -44,7 +44,7 @@ public class GameplayPanel extends PanelWrapper {
             public void componentShown(ComponentEvent e) {
                 int size = Math.min(jPanel.getSize().width - 200, jPanel.getSize().height);
                 game = new Game(gameVariantSetup.getSelectedVariant());
-                boardPanel = new BoardPanel(game.getBoard(), game.getMove(), size);
+                boardPanel = new BoardPanel(game, size);
                 jPanel.add(boardPanel);
                 variantLabel.setText(gameVariantSetup.getSelected());
             }

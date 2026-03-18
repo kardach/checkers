@@ -30,6 +30,10 @@ public class Move {
         subMoves.clear();
     }
 
+    public boolean isStarted() {
+        return start != null;
+    }
+
     public boolean isEmpty() {
         return subMoves.isEmpty();
     }

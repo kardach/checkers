@@ -6,11 +6,6 @@ public class Piece {
         KING,
     }
 
-    public enum Color {
-        BLACK,
-        WHITE,
-    }
-
     private Type type;
     private final Color color;
 
