@@ -1,6 +1,5 @@
 package org.example.model.validators;
 
-import org.example.model.Board;
 import org.example.model.Color;
 import org.example.model.Game;
 import org.example.model.Move;

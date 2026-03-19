@@ -1,5 +1,6 @@
 package org.example.model;
 
+import org.example.model.validators.CaptureValidator;
 import org.example.model.validators.JumpValidator;
 import org.example.options.Variant;
 
@@ -63,10 +64,11 @@ public class Game {
             return board.at(row, col).hasPiece()  && turn == board.at(row,col).getPiece().getColor();
         } else if(move.isStarted() && move.isEmpty()){
             Move.SubMove subMove = new Move.SubMove(move.getStart(), new Move.Position(row, col));
-            return JumpValidator.validate(this, subMove);
+            return JumpValidator.validate(this, subMove) || CaptureValidator.validate(this, subMove);
         } else {
             Move.SubMove subMove = new Move.SubMove(move.getSubMoves().getLast().to(), new Move.Position(row, col));
-            return JumpValidator.validate(this, subMove);
+            Move.SubMove first = move.getSubMoves().getFirst();
+            return !JumpValidator.validate(this, first) && CaptureValidator.validate(this, subMove);
         }
     }
 
@@ -83,9 +85,11 @@ public class Game {
         for(Move.SubMove subMove : subMoves) {
             System.out.println(subMove);
         }
-        move.clear();
+//        move.clear();
         changeTurn();
-//        Piece piece = board.at(subMoves.getFirst().from()).removePiece();
-//        board.at(subMoves.getLast().to()).placePiece(piece);
+        Piece piece = board.at(subMoves.getFirst().from()).removePiece();
+        IO.println(subMoves);
+        board.at(subMoves.getLast().to()).placePiece(piece);
+        move.clear();
     }
 }
