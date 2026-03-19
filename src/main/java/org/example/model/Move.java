@@ -38,6 +38,10 @@ public class Move {
         return subMoves.isEmpty();
     }
 
+    public Position getStart() {
+        return start;
+    }
+
     public List<SubMove> getSubMoves() {
         return subMoves;
     }

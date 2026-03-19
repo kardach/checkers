@@ -61,8 +61,7 @@ class BoardPanel extends JPanel {
                     public void mouseReleased(MouseEvent e) {
                         System.out.println("row = " + row +", col = " + col);
 
-                        if(board.at(row, col).hasPiece() && !move.isStarted()
-                                && game.getTurn() == board.at(row,col).getPiece().getColor() || move.isStarted()) {
+                        if(game.validateSubMove(row, col)) {
                             move.add(row, col);
 
                             if(selectedSquare != null) {

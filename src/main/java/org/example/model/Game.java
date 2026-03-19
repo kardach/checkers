@@ -1,5 +1,6 @@
 package org.example.model;
 
+import org.example.model.validators.JumpValidator;
 import org.example.options.Variant;
 
 import java.util.List;
@@ -55,6 +56,18 @@ public class Game {
 
     public Color getTurn() {
         return turn;
+    }
+
+    public boolean validateSubMove(int row, int col) {
+        if(!move.isStarted()) {
+            return board.at(row, col).hasPiece()  && turn == board.at(row,col).getPiece().getColor();
+        } else if(move.isStarted() && move.isEmpty()){
+            Move.SubMove subMove = new Move.SubMove(move.getStart(), new Move.Position(row, col));
+            return JumpValidator.validate(this, subMove);
+        } else {
+            Move.SubMove subMove = new Move.SubMove(move.getSubMoves().getLast().to(), new Move.Position(row, col));
+            return JumpValidator.validate(this, subMove);
+        }
     }
 
     private void changeTurn() {
