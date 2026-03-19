@@ -13,6 +13,7 @@ public class GameVariantSetup {
                     false, Variant.PiecesPlacement.ON_WHITE, Variant.FirstMove.BLACK, true,
                     true, Variant.Capture.ALL))
     );
+
     private String selected;
 
     public void select(String name) {

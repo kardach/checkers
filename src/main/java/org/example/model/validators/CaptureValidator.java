@@ -1,18 +1,16 @@
 package org.example.model.validators;
 
-import org.example.model.Color;
-import org.example.model.Game;
-import org.example.model.Move;
+import org.example.model.*;
 
 public class CaptureValidator {
-    public static boolean validate(Game game, Move.SubMove subMove) {
-        if(game.getBoard().at(subMove.to()).hasPiece()) {
+    public static boolean validate(Game game, Move move) {
+        if(game.getBoard().at(move.to()).hasPiece()) {
             return false;
         }
-        int col = subMove.to().col() - subMove.from().col();
-        int row = subMove.to().row() - subMove.from().row();
-        Move.Position jumpedOver = new Move.Position(subMove.from().row() + row / 2,
-                subMove.from().col() + col / 2);
+        int col = move.to().col() - move.from().col();
+        int row = move.to().row() - move.from().row();
+        Position jumpedOver = new Position(move.from().row() + row / 2,
+                move.from().col() + col / 2);
         if(game.getTurn() == Color.BLACK) {
             return (col == -2 || col == 2) && row == -2 && game.getBoard().at(jumpedOver).hasPiece()
                     && game.getBoard().at(jumpedOver).getPiece().getColor() == Color.WHITE;

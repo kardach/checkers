@@ -12,11 +12,11 @@ import java.util.List;
 
 class BoardPanel extends JPanel {
     private JButton selectedSquare;
-    private final Move move;
+    private final Sequence sequence;
     private final JButton[][] jButtons;
 
     public BoardPanel(Game game, int size) {
-        this.move = game.getMove();
+        this.sequence = game.getMove();
         Board board = game.getBoard();
         int boardSize = board.getSize();
 
@@ -35,13 +35,13 @@ class BoardPanel extends JPanel {
                 jButton.setRolloverEnabled(false);
                 jButton.addMouseListener(new MouseListener() {
                     private JButton jButton;
-                    private Move move;
+                    private Sequence sequence;
                     private int row;
                     private int col;
 
-                    private MouseListener init(JButton jButton, Move move, int row, int col) {
+                    private MouseListener init(JButton jButton, Sequence sequence, int row, int col) {
                         this.jButton = jButton;
-                        this.move = move;
+                        this.sequence = sequence;
                         this.row = row;
                         this.col = col;
                         return this;
@@ -62,7 +62,7 @@ class BoardPanel extends JPanel {
                         System.out.println("row = " + row +", col = " + col);
 
                         if(game.validateSubMove(row, col)) {
-                            move.add(row, col);
+                            sequence.add(row, col);
 
                             if(selectedSquare != null) {
                                 SquareButtonUI ui = (SquareButtonUI) selectedSquare.getUI();
@@ -86,7 +86,7 @@ class BoardPanel extends JPanel {
                     public void mouseExited(MouseEvent e) {
 
                     }
-                }.init(jButton, move, row, col));
+                }.init(jButton, sequence, row, col));
                 add(jButton);
                 jButtons[row][col] = jButton;
             }
@@ -103,9 +103,9 @@ class BoardPanel extends JPanel {
         }
     }
 
-    public void paintArrow(Graphics2D g, Move.SubMove subMove) {
-        Rectangle fromSquare = jButtons[subMove.from().row()][subMove.from().col()].getBounds();
-        Rectangle toSquare = jButtons[subMove.to().row()][subMove.to().col()].getBounds();
+    public void paintArrow(Graphics2D g, Move move) {
+        Rectangle fromSquare = jButtons[move.from().row()][move.from().col()].getBounds();
+        Rectangle toSquare = jButtons[move.to().row()][move.to().col()].getBounds();
         int fromX = fromSquare.x + fromSquare.width / 2;
         int fromY = fromSquare.y + fromSquare.height / 2;
         int toX = toSquare.x + toSquare.width / 2;
@@ -147,13 +147,13 @@ class BoardPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if(!move.isEmpty()) {
+        if(!sequence.isEmpty()) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(new Color(255, 127, 0));
-            List<Move.SubMove> subMoves = move.getSubMoves();
-            for(Move.SubMove subMove : subMoves) {
-                paintArrow(g2, subMove);
+            List<Move> moves = sequence.getMoves();
+            for(Move move : moves) {
+                paintArrow(g2, move);
             }
         }
     }

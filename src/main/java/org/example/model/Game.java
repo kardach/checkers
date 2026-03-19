@@ -9,13 +9,13 @@ import java.util.List;
 public class Game {
     private final String variantName;
     private final Board board;
-    private final Move move;
+    private final Sequence sequence;
     private Color turn;
 
     public Game(Variant variant) {
         variantName = variant.name();
         board = new Board(variant.boardSize(), variant.lightSquareOnNearRight());
-        move = new Move();
+        sequence = new Sequence();
         if(variant.firstMove() == Variant.FirstMove.BLACK) {
             turn = Color.BLACK;
         } else {
@@ -51,8 +51,8 @@ public class Game {
         return board;
     }
 
-    public Move getMove() {
-        return move;
+    public Sequence getMove() {
+        return sequence;
     }
 
     public Color getTurn() {
@@ -60,15 +60,15 @@ public class Game {
     }
 
     public boolean validateSubMove(int row, int col) {
-        if(!move.isStarted()) {
+        if(!sequence.isStarted()) {
             return board.at(row, col).hasPiece()  && turn == board.at(row,col).getPiece().getColor();
-        } else if(move.isStarted() && move.isEmpty()){
-            Move.SubMove subMove = new Move.SubMove(move.getStart(), new Move.Position(row, col));
-            return JumpValidator.validate(this, subMove) || CaptureValidator.validate(this, subMove);
+        } else if(sequence.isStarted() && sequence.isEmpty()){
+            Move move = new Move(sequence.getStart(), new Position(row, col));
+            return JumpValidator.validate(this, move) || CaptureValidator.validate(this, move);
         } else {
-            Move.SubMove subMove = new Move.SubMove(move.getSubMoves().getLast().to(), new Move.Position(row, col));
-            Move.SubMove first = move.getSubMoves().getFirst();
-            return !JumpValidator.validate(this, first) && CaptureValidator.validate(this, subMove);
+            Move move = new Move(sequence.getMoves().getLast().to(), new Position(row, col));
+            Move first = sequence.getMoves().getFirst();
+            return !JumpValidator.validate(this, first) && CaptureValidator.validate(this, move);
         }
     }
 
@@ -81,15 +81,18 @@ public class Game {
     }
 
     public void performMove() {
-        List<Move.SubMove> subMoves = move.getSubMoves();
-        for(Move.SubMove subMove : subMoves) {
-            System.out.println(subMove);
+        List<Move> moves = sequence.getMoves();
+        for(Move move : moves) {
+            System.out.println(move);
+            int row = (move.from().row() + move.to().row()) / 2;
+            int col = (move.from().col() + move.to().col()) / 2;
+            if(row != 0 && col != 0) {
+                board.at(row, col).removePiece();
+            }
         }
-//        move.clear();
+        Piece piece = board.at(moves.getFirst().from()).removePiece();
+        board.at(moves.getLast().to()).placePiece(piece);
         changeTurn();
-        Piece piece = board.at(subMoves.getFirst().from()).removePiece();
-        IO.println(subMoves);
-        board.at(subMoves.getLast().to()).placePiece(piece);
-        move.clear();
+        sequence.clear();
     }
 }
