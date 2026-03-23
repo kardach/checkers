@@ -1,6 +1,7 @@
 package org.example.ui;
 
 import org.example.options.GameVariantSetup;
+import org.example.options.Variant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,19 +11,37 @@ import java.awt.event.MouseListener;
 
 public class NewGamePanel extends PanelWrapper {
     private final GameVariantSetup gameVariantSetup;
+    private final VariantComboBox variantComboBox;
+    private final PlayButton playButton;
+    private final CancelButton cancelButton;
 
     public NewGamePanel(GameVariantSetup gameVariantSetup) {
         this.gameVariantSetup = gameVariantSetup;
+        variantComboBox = new VariantComboBox();
+        playButton = new PlayButton();
+        cancelButton = new CancelButton();
         gameVariantSetup.select(gameVariantSetup.getVariantNames()[0]);
 
         jPanel.setName("NEW_GAME");
         jPanel.setLayout(null);
-        jPanel.add(new VariantComboBox());
-        jPanel.add(new PlayButton());
-        jPanel.add(new CancelButton());
+        jPanel.add(variantComboBox);
+        jPanel.add(playButton);
+        jPanel.add(cancelButton);
     }
 
-    class VariantComboBox extends JComboBox<String> {
+    public VariantComboBox getVariantComboBox() {
+        return variantComboBox;
+    }
+
+    public PlayButton getPlayButton() {
+        return playButton;
+    }
+
+    public CancelButton getCancelButton() {
+        return cancelButton;
+    }
+
+    public class VariantComboBox extends JComboBox<String> {
         public VariantComboBox() {
             super(gameVariantSetup.getVariantNames());
             setBounds(0, 0, 200, 50);
@@ -34,7 +53,7 @@ public class NewGamePanel extends PanelWrapper {
         }
     }
 
-    static class PlayButton extends JButton {
+    public class PlayButton extends JButton {
         public PlayButton() {
             setText("Play");
             setBounds(0, 100, 200, 50);
@@ -64,7 +83,7 @@ public class NewGamePanel extends PanelWrapper {
         }
     }
 
-    static class CancelButton extends JButton {
+    public class CancelButton extends JButton {
         public CancelButton() {
             setText("Cancel");
             setBounds(0, 200, 200, 50);

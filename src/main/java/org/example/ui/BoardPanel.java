@@ -10,10 +10,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
-class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel {
     private JButton selectedSquare;
     private final Sequence sequence;
     private final JButton[][] jButtons;
+    private boolean rendered;
 
     public BoardPanel(Game game, int size) {
         this.sequence = game.getMove();
@@ -93,6 +94,10 @@ class BoardPanel extends JPanel {
         }
     }
 
+    public JButton getJButton(int row, int col) {
+        return jButtons[row][col];
+    }
+
     public void clearSelection() {
         if(selectedSquare != null) {
             SquareButtonUI ui = (SquareButtonUI) selectedSquare.getUI();
@@ -103,7 +108,7 @@ class BoardPanel extends JPanel {
         }
     }
 
-    public void paintArrow(Graphics2D g, Move move) {
+    private void paintArrow(Graphics2D g, Move move) {
         Rectangle fromSquare = jButtons[move.from().row()][move.from().col()].getBounds();
         Rectangle toSquare = jButtons[move.to().row()][move.to().col()].getBounds();
         int fromX = fromSquare.x + fromSquare.width / 2;

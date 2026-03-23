@@ -11,9 +11,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class GameplayPanel extends PanelWrapper {
-    private static VariantLabel variantLabel;
-    private static Game game;
-    private static BoardPanel boardPanel;
+    private final VariantLabel variantLabel;
+    private Game game;
+    private BoardPanel boardPanel;
 
     public GameplayPanel(GameVariantSetup gameVariantSetup) {
         variantLabel = new VariantLabel();
@@ -64,6 +64,10 @@ public class GameplayPanel extends PanelWrapper {
         jPanel.add(variantLabel);
     }
 
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
+    }
+
     static class VariantLabel extends JLabel {
         public VariantLabel() {
             setBounds(0, 100, 200, 50);
@@ -98,7 +102,7 @@ public class GameplayPanel extends PanelWrapper {
         }
     }
 
-    static class ConfirmMoveButton extends JButton {
+    class ConfirmMoveButton extends JButton {
         public ConfirmMoveButton() {
             setText("Confirm move");
             setBounds(0, 200, 200, 50);

@@ -6,14 +6,27 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class WelcomePanel extends PanelWrapper {
+    private final StartButton startButton;
+    private final ExitButton exitButton;
+
     public WelcomePanel(GameWindow gameWindow) {
+        startButton = new StartButton();
+        exitButton = new ExitButton(gameWindow);
         jPanel.setName("WELCOME");
         jPanel.setLayout(null);
-        jPanel.add(new StartButton());
-        jPanel.add(new ExitButton(gameWindow));
+        jPanel.add(startButton);
+        jPanel.add(exitButton);
     }
 
-    static class StartButton extends JButton {
+    public StartButton getStartButton() {
+        return startButton;
+    }
+
+    public ExitButton getExitButton() {
+        return exitButton;
+    }
+
+    public class StartButton extends JButton {
         public StartButton() {
             setText("Start new game");
             setBounds(0, 0, 200, 50);
@@ -41,7 +54,7 @@ public class WelcomePanel extends PanelWrapper {
         }
     }
 
-    static class ExitButton extends JButton {
+    public class ExitButton extends JButton {
         public ExitButton(GameWindow gameWindow) {
             setText("Exit");
             setBounds(0, 100, 200, 50);
