@@ -1,13 +1,17 @@
 package org.example;
 
+import org.example.model.Game;
 import org.example.model.Square;
 import org.example.options.GameVariantSetup;
+import org.example.ui.GameplayPanel;
 import org.example.ui.OptionsPanel;
 import org.example.ui.WelcomePanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -104,21 +108,32 @@ public class Main {
         pane.setLayout(cardLayout);
 
         WelcomePanel welcomePanel = new WelcomePanel();
-        OptionsPanel optionsPanel = new OptionsPanel();
+        OptionsPanel optionsPanel = new OptionsPanel(gameVariantSetup);
+        GameplayPanel gameplayPanel = new GameplayPanel();
 
-        pane.add("WELCOME", welcomePanel);
-        pane.add("OPTIONS", optionsPanel);
+//        pane.add("WELCOME", welcomePanel);
+//        pane.add("OPTIONS", optionsPanel);
+        pane.add("GAMEPLAY", gameplayPanel);
+        gameplayPanel.setGame(new Game(gameVariantSetup.getSelectedVariant()));
 
-        welcomePanel.getStartButton().addActionListener(_ -> cardLayout.show(pane, "OPTIONS"));
-        welcomePanel.getExitButton().addActionListener(_ -> jFrame.dispose());
+//        welcomePanel.getStartButton().addActionListener(_ -> cardLayout.show(pane, "OPTIONS"));
+//        welcomePanel.getExitButton().addActionListener(_ -> jFrame.dispose());
 
-        JComboBox<String> variantComboBox = optionsPanel.getVariantComboBox();
-        variantComboBox.addActionListener(_ -> {
-            String name = variantComboBox.getItemAt(variantComboBox.getSelectedIndex());
-            gameVariantSetup.select(name);
-            IO.println(name);
-        });
-        optionsPanel.getCancelButton().addActionListener(_ -> cardLayout.show(pane, "WELCOME"));
+//        JComboBox<String> variantComboBox = optionsPanel.getVariantComboBox();
+//        variantComboBox.addActionListener(_ -> {
+//            String name = variantComboBox.getItemAt(variantComboBox.getSelectedIndex());
+//            gameVariantSetup.select(name);
+//        });
+//        optionsPanel.getPlayButton().addActionListener(_ -> {
+//            gameplayPanel.setGame(new Game(gameVariantSetup.getSelectedVariant()));
+//            cardLayout.show(pane, "GAMEPLAY");
+//        });
+//        optionsPanel.getCancelButton().addActionListener(_ -> cardLayout.show(pane, "WELCOME"));
+//
+//        gameplayPanel.getQuitButton().addActionListener(_ -> {
+//            gameplayPanel.removeGame();
+//            cardLayout.show(pane, "OPTIONS");
+//        });
     }
 
     public Main() {
