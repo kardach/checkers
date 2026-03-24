@@ -1,5 +1,7 @@
 package org.example.ui;
 
+import org.example.options.GameVariantSetup;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,12 +14,14 @@ public class OptionsPanel extends JPanel {
     private JComboBox<String> variantComboBox;
     private JButton playButton;
     private JButton cancelButton;
+    private GameVariantSetup gameVariantSetup;
 
-    public OptionsPanel() {
+    public OptionsPanel(GameVariantSetup gameVariantSetup) {
+        this.gameVariantSetup = gameVariantSetup;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createLineBorder(Color.RED, 5));
 
-        comboBoxPanel = getComboBoxPanel();
+        comboBoxPanel = getComboBoxPanel(gameVariantSetup);
         buttonsPanel = getButtonsPanel();
         buttonsContainerPanel = getButtonsContainerPanel();
         formPanel = getFormPanel();
@@ -45,12 +49,11 @@ public class OptionsPanel extends JPanel {
         return cancelButton;
     }
 
-    private JPanel getComboBoxPanel() {
+    private JPanel getComboBoxPanel(GameVariantSetup gameVariantSetup) {
         JPanel comboBoxPanel = new JPanel();
         comboBoxPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 5));
 
-        String[] variants = {"International/Polish", "damii/Ghanaian"};
-        variantComboBox = new JComboBox<>(variants);
+        variantComboBox = new JComboBox<>(gameVariantSetup.getVariantNames());
         variantComboBox.setFont(new Font("Dialog", Font.BOLD, 18));
 
         comboBoxPanel.add(variantComboBox, BorderLayout.NORTH);
