@@ -18,6 +18,7 @@ public class GameVariantSetup {
                         false, Variant.PiecesPlacement.ON_WHITE, Variant.FirstMove.BLACK,
                         true, true, Variant.Capture.ALL))
         ));
+        selected = variants.firstKey();
     }
 
     private String selected;

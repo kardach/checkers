@@ -9,6 +9,7 @@ public class OptionsPanel extends JPanel {
     private final JPanel buttonsContainerPanel;
     private final JPanel formPanel;
     private final JPanel rulesPanel;
+    private JComboBox<String> variantComboBox;
     private JButton playButton;
     private JButton cancelButton;
 
@@ -32,6 +33,10 @@ public class OptionsPanel extends JPanel {
         add(rulesPanel);
     }
 
+    public JComboBox<String> getVariantComboBox() {
+        return variantComboBox;
+    }
+
     public JButton getPlayButton() {
         return playButton;
     }
@@ -45,7 +50,7 @@ public class OptionsPanel extends JPanel {
         comboBoxPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 5));
 
         String[] variants = {"International/Polish", "damii/Ghanaian"};
-        JComboBox<String> variantComboBox = new JComboBox<>(variants);
+        variantComboBox = new JComboBox<>(variants);
         variantComboBox.setFont(new Font("Dialog", Font.BOLD, 18));
 
         comboBoxPanel.add(variantComboBox, BorderLayout.NORTH);

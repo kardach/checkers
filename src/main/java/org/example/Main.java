@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.model.Square;
+import org.example.options.GameVariantSetup;
 import org.example.ui.OptionsPanel;
 import org.example.ui.WelcomePanel;
 
@@ -95,7 +96,8 @@ class SquarePanel extends JPanel {
 //}
 
 public class Main {
-    private JFrame jFrame;
+    private final JFrame jFrame;
+    private final GameVariantSetup gameVariantSetup;
 
     public void addComponentsToPane(Container pane) {
         CardLayout cardLayout = new CardLayout();
@@ -110,6 +112,12 @@ public class Main {
         welcomePanel.getStartButton().addActionListener(_ -> cardLayout.show(pane, "OPTIONS"));
         welcomePanel.getExitButton().addActionListener(_ -> jFrame.dispose());
 
+        JComboBox<String> variantComboBox = optionsPanel.getVariantComboBox();
+        variantComboBox.addActionListener(_ -> {
+            String name = variantComboBox.getItemAt(variantComboBox.getSelectedIndex());
+            gameVariantSetup.select(name);
+            IO.println(name);
+        });
         optionsPanel.getCancelButton().addActionListener(_ -> cardLayout.show(pane, "WELCOME"));
     }
 
@@ -117,6 +125,8 @@ public class Main {
         jFrame = new JFrame("Checkers");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setSize(640, 480);
+
+        gameVariantSetup = new GameVariantSetup();
 
         addComponentsToPane(jFrame.getContentPane());
 
