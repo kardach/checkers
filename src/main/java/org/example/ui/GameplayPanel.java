@@ -1,19 +1,23 @@
 package org.example.ui;
 
 import org.example.model.Game;
+import org.example.model.Move;
 import org.example.model.Piece;
 import org.example.model.Square;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicRadioButtonUI;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class GameplayPanel extends JPanel {
-    private JButton[][] squareButtons;
+    private final JLayeredPane containerPane;
     private final JPanel buttonsPanel;
     private JPanel boardPanel;
-    private final JPanel boardContainerPanel;
-    private JButton selectedSquare;
+    private JPanel arrowsPanel;
+    private JRadioButton[][] squareButtons;
+    private ButtonGroup squareGroup;
     private JButton confirmButton;
     private JButton quitButton;
     private Game game;
@@ -23,23 +27,29 @@ public class GameplayPanel extends JPanel {
         setBorder(BorderFactory.createLineBorder(Color.RED, 5));
 
         buttonsPanel = getButtonsPanel();
-        boardContainerPanel = getBoardContainerPanel();
+        add(buttonsPanel);
 
-        add(buttonsPanel, BorderLayout.WEST);
-
-        selectedSquare = null;
+        containerPane = new JLayeredPane();
+        containerPane.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
+        containerPane.setPreferredSize(new Dimension(300, 300));
+        containerPane.setLayout(new StackLayout());
+        add(containerPane);
     }
 
     public void setGame(Game game) {
         this.game = game;
         boardPanel = getBoardPanel(game);
-        add(boardPanel);
+        arrowsPanel = getArrowsPanel();
+        containerPane.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
+        containerPane.add(arrowsPanel, JLayeredPane.PALETTE_LAYER);
     }
 
     public void removeGame() {
         this.game = null;
-        boardContainerPanel.remove(boardPanel);
+        containerPane.remove(boardPanel);
+        containerPane.remove(arrowsPanel);
         boardPanel = null;
+        arrowsPanel = null;
     }
 
     public JButton getConfirmButton() {
@@ -56,7 +66,8 @@ public class GameplayPanel extends JPanel {
         buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 5));
 
         confirmButton = new JButton("Confirm button");
-        confirmButton.setFont(new Font("Dia log", Font.BOLD, 18));
+        confirmButton.setFont(new Font("Dialog", Font.BOLD, 18));
+        confirmButton.addActionListener(_ -> squareGroup.clearSelection());
 
         quitButton = new JButton("Quit button");
         quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
@@ -66,6 +77,64 @@ public class GameplayPanel extends JPanel {
         buttonsPanel.add(Box.createVerticalGlue());
 
         return buttonsPanel;
+    }
+
+    private JPanel getArrowsPanel() {
+        JPanel arrowsPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setColor(new Color(255, 127, 0));
+                for(Move move: game.getSequence().getMoves()) {
+                    paintArrow(g2, move);
+                }
+            }
+
+            private void paintArrow(Graphics2D g, Move move) {
+                Rectangle fromSquare = squareButtons[move.from().row()][move.from().col()].getBounds();
+                Rectangle toSquare = squareButtons[move.to().row()][move.to().col()].getBounds();
+                int fromX = fromSquare.x + fromSquare.width / 2;
+                int fromY = fromSquare.y + fromSquare.height / 2;
+                int toX = toSquare.x + toSquare.width / 2;
+                int toY = toSquare.y + toSquare.height / 2;
+                int deltaX = toX - fromX;
+                int deltaY = toY - fromY;
+                int adjustRectangle = fromSquare.width / 3;
+                int adjustTriangle = fromSquare.width / 2;
+                int dirX = 0;
+                int dirY = 0;
+
+                if(deltaX > 0 && deltaY > 0) {
+                    dirX = 1;
+                    dirY = 1;
+                } else if(deltaX < 0 && deltaY > 0) {
+                    dirX = -1;
+                    dirY = 1;
+                } else if(deltaX > 0 && deltaY < 0) {
+                    dirX = 1;
+                    dirY = -1;
+                } else if(deltaX < 0 && deltaY < 0) {
+                    dirX = -1;
+                    dirY = -1;
+                }
+                {
+                    int[] xPoints = {fromX + adjustRectangle * dirX, toX - adjustRectangle / 2 * dirX,
+                            toX - adjustRectangle * dirX, fromX + adjustRectangle / 2 * dirX};
+                    int[] yPoints = {fromY + adjustRectangle / 2 * dirY, toY - adjustRectangle * dirY,
+                            toY - adjustRectangle / 2 * dirY, fromY + adjustRectangle * dirY};
+                    g.fillPolygon(xPoints, yPoints, 4);
+                }
+                {
+                    int[] xPoints = {toX - adjustTriangle / 4 * dirX, toX, toX - adjustTriangle * dirX};
+                    int[] yPoints = {toY - adjustTriangle * dirY, toY, toY - adjustTriangle / 4 * dirY};
+                    g.fillPolygon(xPoints, yPoints, 3);
+                }
+            }
+        };
+        arrowsPanel.setOpaque(false);
+
+        return arrowsPanel;
     }
 
     private JPanel getBoardPanel(Game game) {
@@ -78,31 +147,64 @@ public class GameplayPanel extends JPanel {
 
     private void addSquareButtons(JPanel boardPanel, Game game) {
         int boardSize = game.getBoard().getSize();
-        squareButtons = new JButton[boardSize][boardSize];
+        squareButtons = new JRadioButton[boardSize][boardSize];
+        squareGroup = new ButtonGroup();
         for(int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
-                JButton jButton = new JButton();
+                SquareButton squareButton = new SquareButton(row, col);
                 SquareButtonUI ui = new SquareButtonUI();
                 ui.setSquare(game.getBoard().at(row, col));
-                jButton.setUI(ui);
-                jButton.setBorderPainted(false);
-//                jButton.setRolloverEnabled(false);
-                boardPanel.add(jButton);
-                squareButtons[row][col] = jButton;
+                squareButton.setUI(ui);
+                squareButton.setBorderPainted(false);
+                squareButton.setRolloverEnabled(false);
+                squareButton.addItemListener(new ItemListener() {
+                    private int row;
+                    private int col;
+
+                    public ItemListener init(int row, int col) {
+                        this.row = row;
+                        this.col = col;
+                        return this;
+                    }
+
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if(e.getStateChange() == ItemEvent.SELECTED) {
+                            System.out.println(game.validateMove(row, col));
+//                            if(game.validateSubMove(row, col)) {
+                                game.getSequence().add(row, col);
+                                boardPanel.repaint();
+//                            }
+                        }
+                    }
+                }.init(row, col));
+                boardPanel.add(squareButton);
+                squareGroup.add(squareButton);
+                squareButtons[row][col] = squareButton;
             }
         }
     }
 
-    private JPanel getBoardContainerPanel() {
-        JPanel containerPanel = new JPanel();
-        containerPanel.setLayout(new GridBagLayout());
-        containerPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
-        return containerPanel;
+    static class SquareButton extends JRadioButton {
+        private final int row;
+        private final int col;
+
+        public SquareButton(int row, int col) {
+            this.row = row;
+            this.col = col;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public int getCol() {
+            return col;
+        }
     }
 
-    static class SquareButtonUI extends BasicButtonUI {
+    static class SquareButtonUI extends BasicRadioButtonUI {
         private Square square;
-        private boolean selected;
 
         public void setSquare(Square square) {
             this.square = square;
@@ -110,10 +212,6 @@ public class GameplayPanel extends JPanel {
 
         public Square getSquare() {
             return square;
-        }
-
-        public void setSelected(boolean selected) {
-            this.selected = selected;
         }
 
         private void paintMan(Graphics2D g2, Dimension size) {
@@ -147,12 +245,12 @@ public class GameplayPanel extends JPanel {
 
         }
 
-        private void paint(Graphics g, Dimension size) {
+        private void paint(Graphics g, Dimension size, ButtonModel model) {
             Color squareColor;
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            if(selected) {
+            if(model.isSelected()) {
                 squareColor = Color.GREEN;
             } else if(getSquare().getColor() == org.example.model.Color.BLACK) {
                 squareColor = new Color(139, 69, 19);
@@ -172,19 +270,12 @@ public class GameplayPanel extends JPanel {
         }
 
         @Override
-        public void paint(Graphics g, JComponent c) {
+        public synchronized void paint(Graphics g, JComponent c) {
             super.paint(g, c);
+            AbstractButton b = (AbstractButton) c;
+            ButtonModel model = b.getModel();
             Dimension size = c.getSize();
-            paint(g, size);
-        }
-
-        @Override
-        protected void paintButtonPressed(Graphics g, AbstractButton b) {
-            super.paintButtonPressed(g, b);
-            if(b.isContentAreaFilled()) {
-                Dimension size = b.getSize();
-                paint(g, size);
-            }
+            paint(g, size, model);
         }
     }
 }

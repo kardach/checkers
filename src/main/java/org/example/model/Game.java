@@ -51,7 +51,7 @@ public class Game {
         return board;
     }
 
-    public Sequence getMove() {
+    public Sequence getSequence() {
         return sequence;
     }
 
@@ -59,7 +59,7 @@ public class Game {
         return turn;
     }
 
-    public boolean validateSubMove(int row, int col) {
+    public boolean validateMove(int row, int col) {
         if(!sequence.isStarted()) {
             return board.at(row, col).hasPiece()  && turn == board.at(row,col).getPiece().getColor();
         } else if(sequence.isStarted() && sequence.isEmpty()){

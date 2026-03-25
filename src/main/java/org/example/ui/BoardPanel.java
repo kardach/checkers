@@ -17,7 +17,7 @@ public class BoardPanel extends JPanel {
     private boolean rendered;
 
     public BoardPanel(Game game, int size) {
-        this.sequence = game.getMove();
+        this.sequence = game.getSequence();
         Board board = game.getBoard();
         int boardSize = board.getSize();
 
@@ -62,7 +62,7 @@ public class BoardPanel extends JPanel {
                     public void mouseReleased(MouseEvent e) {
                         System.out.println("row = " + row +", col = " + col);
 
-                        if(game.validateSubMove(row, col)) {
+                        if(game.validateMove(row, col)) {
                             sequence.add(row, col);
 
                             if(selectedSquare != null) {
