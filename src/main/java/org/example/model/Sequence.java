@@ -12,7 +12,6 @@ public class Sequence {
     }
 
     public void add(int row, int col) {
-//        System.out.println(row + " " + col);
         if(start == null) {
             start = new Position(row, col);
         } else {

@@ -170,7 +170,6 @@ public class GameplayPanel extends JPanel {
                     @Override
                     public void itemStateChanged(ItemEvent e) {
                         if(e.getStateChange() == ItemEvent.SELECTED) {
-                            System.out.println(game.validateMove(row, col));
 //                            if(game.validateSubMove(row, col)) {
                                 game.getSequence().add(row, col);
                                 boardPanel.repaint();

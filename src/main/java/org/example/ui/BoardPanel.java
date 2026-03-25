@@ -60,8 +60,6 @@ public class BoardPanel extends JPanel {
 
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        System.out.println("row = " + row +", col = " + col);
-
                         if(game.validateMove(row, col)) {
                             sequence.add(row, col);
 
