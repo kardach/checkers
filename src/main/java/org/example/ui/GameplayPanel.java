@@ -68,10 +68,12 @@ public class GameplayPanel extends JPanel {
         confirmButton = new JButton("Confirm button");
         confirmButton.setFont(new Font("Dialog", Font.BOLD, 18));
         confirmButton.addActionListener(_ -> {
-            squareGroup.clearSelection();
-            game.performMove();
-            arrowsPanel.repaint();
-            setClickableSquares();
+            if(!game.getSequence().isEmpty()) {
+                squareGroup.clearSelection();
+                game.performMove();
+                arrowsPanel.repaint();
+                setClickableSquares();
+            }
         });
 
         quitButton = new JButton("Quit button");
@@ -151,6 +153,10 @@ public class GameplayPanel extends JPanel {
         return boardPanel;
     }
 
+    public JRadioButton getSquareButton(int row, int col) {
+        return squareButtons[row][col];
+    }
+
     private void addSquareButtons(JPanel boardPanel, Game game) {
         int boardSize = game.getBoard().getSize();
         squareButtons = new JRadioButton[boardSize][boardSize];
@@ -198,7 +204,6 @@ public class GameplayPanel extends JPanel {
                         || game.getLegalMoves(row, col).isEmpty()) {
                     squareButtons[row][col].setEnabled(false);
                 } else {
-                    System.out.println(row + " " + col);
                     squareButtons[row][col].setEnabled(true);
                     clickableButtons.add(squareButtons[row][col]);
                 }
@@ -287,7 +292,6 @@ public class GameplayPanel extends JPanel {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             if(model.isSelected()) {
-                System.out.println("model is selected");
                 squareColor = Color.GREEN;
             } else if(getSquare().getColor() == org.example.model.Color.BLACK) {
                 squareColor = new Color(139, 69, 19);

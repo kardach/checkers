@@ -4,7 +4,6 @@ import org.example.model.validators.CaptureValidator;
 import org.example.model.validators.JumpValidator;
 import org.example.options.Variant;
 
-import javax.xml.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,11 +100,11 @@ public class Game {
         List<Move> moves = sequence.getMoves();
         System.out.println(moves);
         for(Move move : moves) {
-            System.out.println(move);
-            int row = (move.from().row() + move.to().row()) / 2;
-            int col = (move.from().col() + move.to().col()) / 2;
-            if(row != 0 && col != 0) {
-                board.at(row, col).removePiece();
+            int diffRow = move.from().row() - move.to().row();
+            int diffCol = move.from().col() - move.to().col();
+            System.out.println(diffRow + " " + diffCol);
+            if(Math.abs(diffRow) == 2 && Math.abs(diffCol) == 2) {
+                board.at(move.from().row() + diffRow / 2, move.from().col() + diffCol / 2).removePiece();
             }
         }
         Piece piece = board.at(moves.getFirst().from()).removePiece();

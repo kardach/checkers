@@ -8,7 +8,7 @@ import org.example.ui.WelcomePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.InputEvent;
 
 //
 //interface ViewController {
@@ -70,14 +70,17 @@ import java.awt.event.*;
 public class Main {
     private final JFrame jFrame;
     private final GameVariantSetup gameVariantSetup;
+    private WelcomePanel welcomePanel;
+    private OptionsPanel optionsPanel;
+    private GameplayPanel gameplayPanel;
 
     public void addComponentsToPane(Container pane) {
         CardLayout cardLayout = new CardLayout();
         pane.setLayout(cardLayout);
 
-        WelcomePanel welcomePanel = new WelcomePanel();
-        OptionsPanel optionsPanel = new OptionsPanel(gameVariantSetup);
-        GameplayPanel gameplayPanel = new GameplayPanel();
+        welcomePanel = new WelcomePanel();
+        optionsPanel = new OptionsPanel(gameVariantSetup);
+        gameplayPanel = new GameplayPanel();
 
 //        pane.add("WELCOME", welcomePanel);
 //        pane.add("OPTIONS", optionsPanel);
@@ -104,6 +107,10 @@ public class Main {
 //        });
     }
 
+    public GameplayPanel getGameplayPanel() {
+        return gameplayPanel;
+    }
+
     public Main() {
         jFrame = new JFrame("Checkers");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -116,7 +123,7 @@ public class Main {
         jFrame.setVisible(true);
     }
 
-    static void main() {
+    void main() throws AWTException {
 //        GameVariantSetup gameVariantSetup = new GameVariantSetup();
 //        GameWindow gameWindow = new GameWindow();
 //
@@ -129,20 +136,36 @@ public class Main {
 //        gameWindow.add(gameplayPanel);
 //        gameWindow.display();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Main main = new Main();
+        SwingUtilities.invokeLater(() -> {
+//            new Main();
+            Robot robot;
+            try {
+                robot = new Robot();
+            } catch (AWTException e) {
+                throw new RuntimeException(e);
             }
+            int[] rows = {6, 5, 3, 4, 6, 5, 4, 5, 7, 6, 5, 6, 6 ,5 ,3, 4};
+            int[] cols = {3, 4, 4, 3, 5, 6, 3, 2, 4, 5, 2, 3, 1, 0, 0, 1};
+            for(int i = 0; i < 16; i++) {
+                Point point = getGameplayPanel().getSquareButton(rows[i], cols[i]).getLocationOnScreen();
+                point.x += getGameplayPanel().getSquareButton(rows[i], cols[i]).getWidth() / 2;
+                point.y += getGameplayPanel().getSquareButton(rows[i], cols[i]).getHeight() / 2;
+                robot.mouseMove(point.x, point.y);
+                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                if(i % 2 == 1) {
+                    point = getGameplayPanel().getConfirmButton().getLocationOnScreen();
+                    point.x += getGameplayPanel().getConfirmButton().getWidth() / 2;
+                    point.y += getGameplayPanel().getConfirmButton().getHeight() / 2;
+                    robot.mouseMove(point.x, point.y);
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                }
+            }
+
         });
 
-//        Robot robot = new Robot();
-//        Point point = welcomePanel.getStartButton().getLocationOnScreen();
-//        point.x += welcomePanel.getStartButton().getWidth() / 2;
-//        point.y += welcomePanel.getStartButton().getHeight() / 2;
-//        robot.mouseMove(point.x, point.y);
-//        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-//        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
 //        gameVariantSetup.select("International/Polish");
 //        newGamePanel.getJPanel().addComponentListener(new ComponentListener() {
 //            private Robot robot;
