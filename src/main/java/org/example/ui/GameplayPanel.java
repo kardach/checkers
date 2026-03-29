@@ -1,15 +1,14 @@
 package org.example.ui;
 
-import org.example.model.Game;
-import org.example.model.Move;
-import org.example.model.Piece;
-import org.example.model.Square;
+import org.example.model.*;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 public class GameplayPanel extends JPanel {
     private final JLayeredPane containerPane;
@@ -17,6 +16,7 @@ public class GameplayPanel extends JPanel {
     private JPanel boardPanel;
     private JPanel arrowsPanel;
     private JRadioButton[][] squareButtons;
+    private ArrayList<JRadioButton> clickableButtons;
     private ButtonGroup squareGroup;
     private JButton confirmButton;
     private JButton quitButton;
@@ -67,7 +67,12 @@ public class GameplayPanel extends JPanel {
 
         confirmButton = new JButton("Confirm button");
         confirmButton.setFont(new Font("Dialog", Font.BOLD, 18));
-        confirmButton.addActionListener(_ -> squareGroup.clearSelection());
+        confirmButton.addActionListener(_ -> {
+            squareGroup.clearSelection();
+            game.performMove();
+            arrowsPanel.repaint();
+            setClickableSquares();
+        });
 
         quitButton = new JButton("Quit button");
         quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
@@ -141,6 +146,7 @@ public class GameplayPanel extends JPanel {
         JPanel boardPanel = new JPanel(new BoardLayout(10, 10));
         boardPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 0));
         addSquareButtons(boardPanel, game);
+        setClickableSquares();
 
         return boardPanel;
     }
@@ -149,6 +155,7 @@ public class GameplayPanel extends JPanel {
         int boardSize = game.getBoard().getSize();
         squareButtons = new JRadioButton[boardSize][boardSize];
         squareGroup = new ButtonGroup();
+        clickableButtons = new ArrayList<>();
         for(int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
                 SquareButton squareButton = new SquareButton(row, col);
@@ -170,10 +177,9 @@ public class GameplayPanel extends JPanel {
                     @Override
                     public void itemStateChanged(ItemEvent e) {
                         if(e.getStateChange() == ItemEvent.SELECTED) {
-//                            if(game.validateSubMove(row, col)) {
-                                game.getSequence().add(row, col);
-                                boardPanel.repaint();
-//                            }
+                            game.getSequence().add(row, col);
+                            updateClickableSquares(row, col);
+                            boardPanel.repaint();
                         }
                     }
                 }.init(row, col));
@@ -181,6 +187,37 @@ public class GameplayPanel extends JPanel {
                 squareGroup.add(squareButton);
                 squareButtons[row][col] = squareButton;
             }
+        }
+    }
+
+    private void setClickableSquares() {
+        for(int row = 0; row < game.getBoard().getSize(); row++) {
+            for(int col = 0; col < game.getBoard().getSize(); col++) {
+                Square square = game.getBoard().at(row, col);
+                if (!square.hasPiece() || square.getPiece().getColor() != game.getTurn()
+                        || game.getLegalMoves(row, col).isEmpty()) {
+                    squareButtons[row][col].setEnabled(false);
+                } else {
+                    System.out.println(row + " " + col);
+                    squareButtons[row][col].setEnabled(true);
+                    clickableButtons.add(squareButtons[row][col]);
+                }
+            }
+        }
+    }
+
+    private void updateClickableSquares(int row, int col) {
+        for(JRadioButton squareButton: clickableButtons) {
+            squareButton.setEnabled(false);
+        }
+        clickableButtons.clear();
+        clickableButtons.add(squareButtons[row][col]);
+        for(Move move: game.getLegalMoves(row, col)) {
+            Position position = move.to();
+            clickableButtons.add(squareButtons[position.row()][position.col()]);
+        }
+        for(JRadioButton button : clickableButtons) {
+            button.setEnabled(true);
         }
     }
 
@@ -250,6 +287,7 @@ public class GameplayPanel extends JPanel {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             if(model.isSelected()) {
+                System.out.println("model is selected");
                 squareColor = Color.GREEN;
             } else if(getSquare().getColor() == org.example.model.Color.BLACK) {
                 squareColor = new Color(139, 69, 19);

@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.model.Game;
-import org.example.model.Square;
 import org.example.options.GameVariantSetup;
 import org.example.ui.GameplayPanel;
 import org.example.ui.OptionsPanel;
@@ -10,38 +9,7 @@ import org.example.ui.WelcomePanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-abstract class MouseReleasedListener extends MouseAdapter {
-    public abstract void mouseReleased(MouseEvent e);
-}
-
-class SquarePanel extends JPanel {
-    private Square square;
-    private boolean selected;
-    private boolean color;
-
-    public SquarePanel(boolean color) {
-        this.square = square;
-        this.color = color;
-        if(selected) {
-            setBackground(Color.GREEN);
-        } else {
-            setBackground(color ? new java.awt.Color(139, 69, 19) : new java.awt.Color(255, 228, 196));
-        }
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-        revalidate();
-        repaint();
-    }
-}
 //
 //interface ViewController {
 //    void nextView();
