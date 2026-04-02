@@ -23,6 +23,7 @@ public class Piece {
     }
 
     public void promote() {
+        System.out.println("promote");
         type = Type.KING;
     }
 }

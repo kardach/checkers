@@ -12,11 +12,12 @@ public class GameVariantSetup {
     public GameVariantSetup() {
         variants.putAll(Map.ofEntries(
                 entry("International/Polish", new Variant("International/Polish", 10,
-                        20, true, Variant.PiecesPlacement.ON_BLACK,
-                        Variant.FirstMove.WHITE, true, true, Variant.Capture.MAXIMUM)),
-                entry("Ghanaian/damii", new Variant("Ghanaian/damii", 10, 20,
+                        1, true, Variant.PiecesPlacement.ON_BLACK,
+                        Variant.FirstMove.WHITE, true, true, Variant.Capture.MAXIMUM,
+                        Variant.Crowning.ON_FINISH)),
+                entry("Ghanaian/damii", new Variant("Ghanaian/damii", 10, 1,
                         false, Variant.PiecesPlacement.ON_WHITE, Variant.FirstMove.BLACK,
-                        true, true, Variant.Capture.ALL))
+                        true, true, Variant.Capture.ALL, Variant.Crowning.ON_FINISH))
         ));
         selected = variants.firstKey();
     }

@@ -12,6 +12,8 @@ public class Game {
     private final Board board;
     private final Sequence sequence;
     private Color turn;
+    private final int kingsRange;
+    private Variant.Crowning crowning;
 
     public Game(Variant variant) {
         variantName = variant.name();
@@ -42,6 +44,9 @@ public class Game {
                 col = (col + 1) % 2;
             }
         }
+
+        kingsRange = variant.flyingKings() ? boardSize : 2;
+        crowning = variant.crowning();
     }
 
     public String getVariantName() {
@@ -70,7 +75,7 @@ public class Game {
             if(piece.getType() == Piece.Type.MAN) {
                 multiplierMax = 2;
             } else {
-                multiplierMax = board.getSize();
+                multiplierMax =  kingsRange;
             }
             for(int multiplier = 1 ; multiplier <= multiplierMax; multiplier++) {
                 for(int i = 0; i < 4; i++) {
@@ -108,6 +113,11 @@ public class Game {
             }
         }
         Piece piece = board.at(moves.getFirst().from()).removePiece();
+        if(crowning == Variant.Crowning.ON_FINISH
+                && (moves.getLast().to().row() == 0 && piece.getColor() == Color.BLACK
+                || moves.getLast().to().row() == board.getSize() - 1 && piece.getColor() == Color.WHITE)) {
+            piece.promote();
+        }
         board.at(moves.getLast().to()).placePiece(piece);
         changeTurn();
         sequence.clear();

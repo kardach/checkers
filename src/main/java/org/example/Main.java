@@ -144,9 +144,9 @@ public class Main {
             } catch (AWTException e) {
                 throw new RuntimeException(e);
             }
-            int[] rows = {6, 5, 3, 4, 6, 5, 4, 5, 7, 6, 5, 6, 6 ,5 ,3, 4};
-            int[] cols = {3, 4, 4, 3, 5, 6, 3, 2, 4, 5, 2, 3, 1, 0, 0, 1};
-            for(int i = 0; i < 16; i++) {
+            int[] rows = {9, 8, 0, 1, 8, 7, 1, 2, 7, 6, 2, 3, 6, 5, 3, 4, 5, 4, 4, 5, 4, 3, 5, 6, 3, 2, 6, 7, 2, 1, 7, 8, 1, 0, 8, 9};
+            int[] cols = {8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1};
+            for(int i = 0; i < 32; i++) {
                 Point point = getGameplayPanel().getSquareButton(rows[i], cols[i]).getLocationOnScreen();
                 point.x += getGameplayPanel().getSquareButton(rows[i], cols[i]).getWidth() / 2;
                 point.y += getGameplayPanel().getSquareButton(rows[i], cols[i]).getHeight() / 2;
@@ -164,78 +164,5 @@ public class Main {
             }
 
         });
-
-
-//        gameVariantSetup.select("International/Polish");
-//        newGamePanel.getJPanel().addComponentListener(new ComponentListener() {
-//            private Robot robot;
-//            private Point point;
-//
-//            public ComponentListener init(Robot robot, Point point) {
-//                this.robot = robot;
-//                this.point = point;
-//                return this;
-//            }
-//
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void componentMoved(ComponentEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void componentShown(ComponentEvent e) {
-//                point = newGamePanel.getPlayButton().getLocationOnScreen();
-//                point.x += newGamePanel.getPlayButton().getWidth() / 2;
-//                point.y += newGamePanel.getPlayButton().getHeight() / 2;
-//                robot.mouseMove(point.x, point.y);
-//                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-//                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-//            }
-//
-//            @Override
-//            public void componentHidden(ComponentEvent e) {
-//
-//            }
-//        }.init(robot, point));
-//        gameplayPanel.getJPanel().addComponentListener(new ComponentListener() {
-//            private Robot robot;
-//            private Point point;
-//
-//            public ComponentListener init(Robot robot, Point point) {
-//                this.robot = robot;
-//                this.point = point;
-//                return this;
-//            }
-//
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void componentMoved(ComponentEvent e) {
-//
-//            }
-//
-//            @Override
-//            public void componentShown(ComponentEvent e) {
-//                point = gameplayPanel.getBoardPanel().getJButton(3, 0).getLocationOnScreen();
-//                point.x = gameplayPanel.getBoardPanel().getJButton(3, 0).getWidth() / 2;
-//                point.y = gameplayPanel.getBoardPanel().getJButton(3, 0).getHeight() / 2;
-//                robot.mouseMove(point.x, point.y);
-//                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-//                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-//            }
-//
-//            @Override
-//            public void componentHidden(ComponentEvent e) {
-//
-//            }
-//        }.init(robot, point));
     }
 }

@@ -282,8 +282,44 @@ public class GameplayPanel extends JPanel {
                     size.width - 2 * borderThickness, size.height / 2 - 2 * borderThickness);
         }
 
-        private void paintKing(Graphics2D g, Dimension size) {
+        private void paintKing(Graphics2D g2, Dimension size) {
+            Piece piece = square.getPiece();
+            Color pieceColor = piece.getColor() == org.example.model.Color.BLACK ? Color.BLACK : Color.WHITE;
+            Color pieceBorderColor = piece.getColor() == org.example.model.Color.BLACK ? Color.WHITE : Color.BLACK;
 
+            int borderThickness = (size.height + 5) / 20;
+
+            g2.setColor(pieceBorderColor);
+            g2.fillArc(0, size.height * 4 / 8, size.width, size.height / 2, 0, -180);
+            g2.setColor(pieceColor);
+            g2.fillArc(borderThickness, size.height * 4 / 8 + borderThickness,
+                    size.width -  2 * borderThickness, size.height / 2 - 2 * borderThickness,
+                    0, -180);
+
+            g2.setColor(pieceBorderColor);
+            g2.fillRect(0, size.height * 4 / 8, size.width, size.height / 4 + 1);
+            g2.setColor(pieceColor);
+            g2.fillRect(borderThickness, size.height * 4 / 8, size.width - 2 * borderThickness,
+                    size.height / 4 + 2);
+
+            g2.setColor(pieceBorderColor);
+            g2.fillArc(0, size.height * 2 / 8, size.width, size.height / 2, 0, -180);
+            g2.setColor(pieceColor);
+            g2.fillArc(borderThickness, size.height * 2 / 8 + borderThickness,
+                    size.width -  2 * borderThickness, size.height / 2 - 2 * borderThickness,
+                    0, -180);
+
+            g2.setColor(pieceBorderColor);
+            g2.fillRect(0, size.height * 2 / 8, size.width, size.height / 4 + 1);
+            g2.setColor(pieceColor);
+            g2.fillRect(borderThickness, size.height * 2 / 8, size.width - 2 * borderThickness,
+                    size.height / 4 + 2);
+
+            g2.setColor(pieceBorderColor);
+            g2.fillOval(0, 0, size.width, size.height / 2);
+            g2.setColor(pieceColor);
+            g2.fillOval(borderThickness, borderThickness,
+                    size.width - 2 * borderThickness, size.height / 2 - 2 * borderThickness);
         }
 
         private void paint(Graphics g, Dimension size, ButtonModel model) {
