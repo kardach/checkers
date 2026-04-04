@@ -81,7 +81,6 @@ public class GameplayPanel extends JPanel {
                     }
                 }
                 setClickableSquares();
-                System.out.println("Confirm");
             }
         });
 
@@ -215,9 +214,8 @@ public class GameplayPanel extends JPanel {
                 Square square = game.getBoard().at(row, col);
                 if (!square.hasPiece() || square.getPiece().getColor() != game.getTurn()
                         || game.getLegalMoves(row, col).isEmpty()) {
-                    squareButtons[row][col].setEnabled(false);
+//                    squareButtons[row][col].setEnabled(false);
                 } else {
-                    System.out.println(row + " " + col);
                     squareButtons[row][col].setEnabled(true);
                     clickableButtons.add(squareButtons[row][col]);
                 }

@@ -111,7 +111,6 @@ public class Game {
                 }
             }
         }
-        System.out.println(moves);
         return moves;
     }
 
@@ -125,7 +124,6 @@ public class Game {
 
     public void performMove() {
         List<Move> moves = sequence.getMoves();
-        System.out.println(moves);
         for(Move move : moves) {
             int diffRow = move.to().row() - move.from().row();
             int diffCol = move.to().col() - move.from().col();
