@@ -1,4 +1,4 @@
-package org.example.model.validators;
+package org.example.validators;
 
 import org.example.model.*;
 

@@ -73,6 +73,7 @@ public class GameplayPanel extends JPanel {
                 game.performMove();
                 arrowsPanel.repaint();
                 setClickableSquares();
+                System.out.println("Confirm");
             }
         });
 
@@ -204,6 +205,7 @@ public class GameplayPanel extends JPanel {
                         || game.getLegalMoves(row, col).isEmpty()) {
                     squareButtons[row][col].setEnabled(false);
                 } else {
+                    System.out.println(row + " " + col);
                     squareButtons[row][col].setEnabled(true);
                     clickableButtons.add(squareButtons[row][col]);
                 }

@@ -123,7 +123,7 @@ public class Main {
         jFrame.setVisible(true);
     }
 
-    void main() throws AWTException {
+    void main() {
 //        GameVariantSetup gameVariantSetup = new GameVariantSetup();
 //        GameWindow gameWindow = new GameWindow();
 //
@@ -146,7 +146,7 @@ public class Main {
             }
             int[] rows = {9, 8, 0, 1, 8, 7, 1, 2, 7, 6, 2, 3, 6, 5, 3, 4, 5, 4, 4, 5, 4, 3, 5, 6, 3, 2, 6, 7, 2, 1, 7, 8, 1, 0, 8, 9};
             int[] cols = {8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1};
-            for(int i = 0; i < 32; i++) {
+            for(int i = 0; i < 36; i++) {
                 Point point = getGameplayPanel().getSquareButton(rows[i], cols[i]).getLocationOnScreen();
                 point.x += getGameplayPanel().getSquareButton(rows[i], cols[i]).getWidth() / 2;
                 point.y += getGameplayPanel().getSquareButton(rows[i], cols[i]).getHeight() / 2;

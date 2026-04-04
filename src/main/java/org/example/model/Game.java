@@ -1,7 +1,7 @@
 package org.example.model;
 
-import org.example.model.validators.CaptureValidator;
-import org.example.model.validators.JumpValidator;
+import org.example.validators.CaptureValidator;
+import org.example.validators.JumpValidator;
 import org.example.options.Variant;
 
 import java.util.ArrayList;
@@ -13,7 +13,9 @@ public class Game {
     private final Sequence sequence;
     private Color turn;
     private final int kingsRange;
-    private Variant.Crowning crowning;
+    private final Variant.Crowning crowning;
+    private final boolean backwardsCapture;
+    private final boolean flyingKings;
 
     public Game(Variant variant) {
         variantName = variant.name();
@@ -47,6 +49,16 @@ public class Game {
 
         kingsRange = variant.flyingKings() ? boardSize : 2;
         crowning = variant.crowning();
+        backwardsCapture = variant.menCaptureBackwards();
+        flyingKings = variant.flyingKings();
+    }
+
+    public boolean isBackwardsCaptureAllowed() {
+        return backwardsCapture;
+    }
+
+    public boolean areFlyingKingsAllowed() {
+        return flyingKings;
     }
 
     public String getVariantName() {
@@ -71,17 +83,14 @@ public class Game {
             Piece piece = board.at(fromRow, fromCol).getPiece();
             Position[] diagonals = {new Position(1, 1), new Position(1, -1),
                     new Position(-1, 1), new Position(-1, -1)};
-            int multiplierMax;
-            if(piece.getType() == Piece.Type.MAN) {
-                multiplierMax = 2;
-            } else {
-                multiplierMax =  kingsRange;
-            }
+            int multiplierMax = piece.getType() == Piece.Type.MAN ? 2 : kingsRange;
+
             for(int multiplier = 1 ; multiplier <= multiplierMax; multiplier++) {
                 for(int i = 0; i < 4; i++) {
                     int toRow = fromRow + diagonals[i].row() * multiplier;
                     int toCol = fromCol + diagonals[i].col() * multiplier;
                     Move possibleMove = new Move(new Position(fromRow, fromCol), new Position(toRow, toCol));
+
                     if(0 <= toRow && toRow <= board.getSize() - 1 && 0 <= toCol && toCol <= board.getSize() - 1
                             && (JumpValidator.validate(this, possibleMove)
                             || CaptureValidator.validate(this, possibleMove))) {
@@ -89,6 +98,7 @@ public class Game {
                     }
                 }
             }
+            System.out.println(moves);
         }
         return moves;
     }
@@ -105,11 +115,18 @@ public class Game {
         List<Move> moves = sequence.getMoves();
         System.out.println(moves);
         for(Move move : moves) {
-            int diffRow = move.from().row() - move.to().row();
-            int diffCol = move.from().col() - move.to().col();
-            System.out.println(diffRow + " " + diffCol);
-            if(Math.abs(diffRow) == 2 && Math.abs(diffCol) == 2) {
-                board.at(move.from().row() + diffRow / 2, move.from().col() + diffCol / 2).removePiece();
+            int diffRow = move.to().row() - move.from().row();
+            int diffCol = move.to().col() - move.from().col();
+            int steps = diffCol > 0 ? diffCol : -diffCol;
+            int stepCol = diffCol / steps;
+            int stepRow = diffRow / steps;
+
+            for(int i = 1; i < steps ; i++) {
+                int row = move.from().row() + stepRow * i;
+                int col = move.from().col() + stepCol * i;
+                if(board.at(row, col).hasPiece()) {
+                    board.at(row, col).removePiece();
+                }
             }
         }
         Piece piece = board.at(moves.getFirst().from()).removePiece();
