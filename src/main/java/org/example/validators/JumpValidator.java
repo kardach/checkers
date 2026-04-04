@@ -22,14 +22,10 @@ final public class JumpValidator {
         int diffRow = to.row() - from.row();
 
         if(piece.getType() == Piece.Type.MAN) {
-            if(game.isBackwardsCaptureAllowed()) {
-                return (diffCol == -1 || diffCol == 1) && (diffRow == -1 || diffRow ==1);
+            if(game.getTurn() == Color.BLACK) {
+                return (diffCol == -1 || diffCol == 1) && diffRow == -1;
             } else {
-                if(game.getTurn() == Color.BLACK) {
-                    return (diffCol == -1 || diffCol == 1) && diffRow == -1;
-                } else {
-                    return (diffCol == -1 || diffCol == 1) && diffRow == 1;
-                }
+                return (diffCol == -1 || diffCol == 1) && diffRow == 1;
             }
         } else {
             if(game.areFlyingKingsAllowed()) {

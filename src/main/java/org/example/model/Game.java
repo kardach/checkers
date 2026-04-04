@@ -79,27 +79,26 @@ public class Game {
 
     public List<Move> getLegalMoves(int fromRow, int fromCol) {
         List<Move> moves = new ArrayList<>();
-        if(board.at(fromRow, fromCol).hasPiece()) {
-            Piece piece = board.at(fromRow, fromCol).getPiece();
-            Position[] diagonals = {new Position(1, 1), new Position(1, -1),
-                    new Position(-1, 1), new Position(-1, -1)};
-            int multiplierMax = piece.getType() == Piece.Type.MAN ? 2 : kingsRange;
+        if (!board.at(fromRow, fromCol).hasPiece()) {
+            return moves;
+        }
+        Piece piece = board.at(fromRow, fromCol).getPiece();
+        Position[] diagonals = {new Position(1, 1), new Position(1, -1),
+                new Position(-1, 1), new Position(-1, -1)};
+        int multiplierMax = piece.getType() == Piece.Type.MAN ? 2 : kingsRange;
 
+        for(int i = 0; i < 4; i++) {
             for(int multiplier = 1 ; multiplier <= multiplierMax; multiplier++) {
-                for(int i = 0; i < 4; i++) {
-                    int toRow = fromRow + diagonals[i].row() * multiplier;
-                    int toCol = fromCol + diagonals[i].col() * multiplier;
-                    Move possibleMove = new Move(new Position(fromRow, fromCol), new Position(toRow, toCol));
-
-                    if(0 <= toRow && toRow <= board.getSize() - 1 && 0 <= toCol && toCol <= board.getSize() - 1
-                            && (JumpValidator.validate(this, possibleMove)
-                            || CaptureValidator.validate(this, possibleMove))) {
-                        moves.add(possibleMove);
-                    }
+                int toRow = fromRow + diagonals[i].row() * multiplier;
+                int toCol = fromCol + diagonals[i].col() * multiplier;
+                Move possibleMove = new Move(new Position(fromRow, fromCol), new Position(toRow, toCol));
+                if(JumpValidator.validate(this, possibleMove)
+                        || CaptureValidator.validate(this, possibleMove)) {
+                    moves.add(possibleMove);
                 }
             }
-            System.out.println(moves);
         }
+        System.out.println(moves);
         return moves;
     }
 
