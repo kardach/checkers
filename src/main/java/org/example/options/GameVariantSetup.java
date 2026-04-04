@@ -15,7 +15,7 @@ public class GameVariantSetup {
                         1, true, Variant.PiecesPlacement.ON_BLACK,
                         Variant.FirstMove.WHITE, true, true, Variant.Capture.MAXIMUM,
                         Variant.Crowning.ON_FINISH)),
-                entry("Ghanaian/damii", new Variant("Ghanaian/damii", 10, 2,
+                entry("Ghanaian/damii", new Variant("Ghanaian/damii", 10, 1,
                         false, Variant.PiecesPlacement.ON_WHITE, Variant.FirstMove.BLACK,
                         true, true, Variant.Capture.ALL, Variant.Crowning.ON_FINISH))
         ));

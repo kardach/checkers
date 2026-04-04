@@ -16,6 +16,9 @@ public class Game {
     private final Variant.Crowning crowning;
     private final boolean backwardsCapture;
     private final boolean flyingKings;
+    private int blackPieces;
+    private int whitePieces;
+    private Color winner;
 
     public Game(Variant variant) {
         variantName = variant.name();
@@ -51,6 +54,8 @@ public class Game {
         crowning = variant.crowning();
         backwardsCapture = variant.menCaptureBackwards();
         flyingKings = variant.flyingKings();
+        blackPieces = variant.piecesPerSide();
+        whitePieces = variant.piecesPerSide();
     }
 
     public boolean isBackwardsCaptureAllowed() {
@@ -59,6 +64,14 @@ public class Game {
 
     public boolean areFlyingKingsAllowed() {
         return flyingKings;
+    }
+
+    public boolean isFinished() {
+        return winner != null;
+    }
+
+    public Color getWinner() {
+        return winner;
     }
 
     public String getVariantName() {
@@ -124,7 +137,12 @@ public class Game {
                 int row = move.from().row() + stepRow * i;
                 int col = move.from().col() + stepCol * i;
                 if(board.at(row, col).hasPiece()) {
-                    board.at(row, col).removePiece();
+                    Piece capturedPiece = board.at(row, col).removePiece();
+                    if(capturedPiece.getColor() == Color.BLACK) {
+                        blackPieces--;
+                    } else {
+                        whitePieces--;
+                    }
                 }
             }
         }
@@ -137,5 +155,11 @@ public class Game {
         board.at(moves.getLast().to()).placePiece(piece);
         changeTurn();
         sequence.clear();
+
+        if(blackPieces == 0) {
+            winner = Color.WHITE;
+        } else if(whitePieces == 0) {
+            winner = Color.BLACK;
+        }
     }
 }

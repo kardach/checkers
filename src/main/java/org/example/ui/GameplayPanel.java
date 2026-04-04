@@ -20,6 +20,7 @@ public class GameplayPanel extends JPanel {
     private ButtonGroup squareGroup;
     private JButton confirmButton;
     private JButton quitButton;
+    private JLabel winnerLabel;
     private Game game;
 
     public GameplayPanel() {
@@ -72,6 +73,13 @@ public class GameplayPanel extends JPanel {
                 squareGroup.clearSelection();
                 game.performMove();
                 arrowsPanel.repaint();
+                if(game.isFinished()) {
+                    if(game.getWinner() == org.example.model.Color.BLACK) {
+                        winnerLabel.setText("Black won");
+                    } else {
+                        winnerLabel.setText("White won");
+                    }
+                }
                 setClickableSquares();
                 System.out.println("Confirm");
             }
@@ -80,8 +88,12 @@ public class GameplayPanel extends JPanel {
         quitButton = new JButton("Quit button");
         quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
 
+        winnerLabel = new JLabel();
+        winnerLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+
         buttonsPanel.add(confirmButton);
         buttonsPanel.add(quitButton);
+        buttonsPanel.add(winnerLabel);
         buttonsPanel.add(Box.createVerticalGlue());
 
         return buttonsPanel;
@@ -218,6 +230,9 @@ public class GameplayPanel extends JPanel {
             squareButton.setEnabled(false);
         }
         clickableButtons.clear();
+        if(game.isFinished()) {
+            return;
+        }
         clickableButtons.add(squareButtons[row][col]);
         for(Move move: game.getLegalMoves(row, col)) {
             Position position = move.to();
