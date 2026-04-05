@@ -26,14 +26,14 @@ public class CaptureValidator {
 
         Position jumpedOver = new Position(move.from().row() + row / 2,
                 move.from().col() + col / 2);
-        if(piece.getType() == Piece.Type.MAN) {
+        if(piece.getType() == Type.MAN) {
             if(!game.getBoard().at(jumpedOver).hasPiece()) {
                 return false;
             }
 
             Piece capturedPiece = game.getBoard().at(jumpedOver).getPiece();
 
-            if(game.isBackwardsCaptureAllowed()) {
+            if(game.canMenCaptureBackwards()) {
                 return Math.abs(diffCol) == 2 && Math.abs(diffRow) == 2 && piece.getColor() != capturedPiece.getColor();
             } else {
                 return  Math.abs(diffCol) == 2

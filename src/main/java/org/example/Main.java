@@ -95,7 +95,7 @@ public class Main {
             gameVariantSetup.select(name);
         });
         optionsPanel.getPlayButton().addActionListener(_ -> {
-            gameplayPanel.setGame(new Game(gameVariantSetup.getSelectedVariant()));
+            gameplayPanel.setGame(gameVariantSetup.getGame());
             cardLayout.show(pane, "GAMEPLAY");
         });
         optionsPanel.getCancelButton().addActionListener(_ -> cardLayout.show(pane, "WELCOME"));

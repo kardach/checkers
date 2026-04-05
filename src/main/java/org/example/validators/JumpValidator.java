@@ -21,7 +21,7 @@ final public class JumpValidator {
         int diffCol = to.col() - from.col();
         int diffRow = to.row() - from.row();
 
-        if(piece.getType() == Piece.Type.MAN) {
+        if(piece.getType() == Type.MAN) {
             if(game.getTurn() == Color.BLACK) {
                 return (diffCol == -1 || diffCol == 1) && diffRow == -1;
             } else {

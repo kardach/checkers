@@ -354,7 +354,7 @@ public class GameplayPanel extends JPanel {
             g2.fillRect(0, 0, size.width, size.height);
 
             if(square.hasPiece()) {
-                if(square.getPiece().getType() == Piece.Type.MAN) {
+                if(square.getPiece().getType() == Type.MAN) {
                     paintMan(g2, size);
                 } else {
                     paintKing(g2, size);
