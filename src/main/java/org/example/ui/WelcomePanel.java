@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WelcomePanel extends JPanel {
-    private JButton startButton;
-    private JButton exitButton;
+    private final JButton startButton;
+    private final JButton exitButton;
 
     public WelcomePanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

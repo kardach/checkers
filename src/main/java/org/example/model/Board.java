@@ -1,7 +1,5 @@
 package org.example.model;
 
-import org.example.options.Variant;
-
 import java.util.ArrayList;
 
 public class Board {

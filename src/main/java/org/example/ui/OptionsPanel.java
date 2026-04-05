@@ -14,7 +14,7 @@ public class OptionsPanel extends JPanel {
     private JComboBox<String> variantComboBox;
     private JButton playButton;
     private JButton cancelButton;
-    private GameVariantSetup gameVariantSetup;
+    private final GameVariantSetup gameVariantSetup;
 
     public OptionsPanel(GameVariantSetup gameVariantSetup) {
         this.gameVariantSetup = gameVariantSetup;
