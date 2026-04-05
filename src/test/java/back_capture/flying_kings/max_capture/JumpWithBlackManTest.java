@@ -5,6 +5,8 @@ import org.example.model.Color;
 import org.example.options.GameBuilder;
 import org.example.ui.GameplayPanel;
 import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,17 +19,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JumpWithBlackManTest {
-    JFrame jFrame;
-    GameplayPanel gameplayPanel;
-    ArrayList<CustomPiecePlacement> customPiecePlacements;
-    Game game;
-    Robot robot;
+    private static JFrame jFrame;
+    private GameplayPanel gameplayPanel;
+    private static ArrayList<CustomPiecePlacement> customPiecePlacements;
+    private Game game;
+    private static Robot robot;
 
-    @BeforeEach
-    void init() throws AWTException {
+    @BeforeAll
+    static void initAll() throws AWTException {
         jFrame = new JFrame("Checkers");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setSize(640, 480);
+        jFrame.setVisible(true);
 
         CardLayout cardLayout = new CardLayout();
         jFrame.getContentPane().setLayout(cardLayout);
@@ -36,6 +39,11 @@ public class JumpWithBlackManTest {
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 1, 1)
         ));
 
+        robot = new Robot();
+    }
+
+    @BeforeEach
+    void init() {
         var gameBuilder = getGameBuilder();
         game = gameBuilder.build();
 
@@ -43,9 +51,6 @@ public class JumpWithBlackManTest {
         gameplayPanel.setGame(game);
 
         jFrame.getContentPane().add("GAMEPLAY", gameplayPanel);
-        jFrame.setVisible(true);
-
-        robot = new Robot();
     }
 
     private @NonNull GameBuilder getGameBuilder() {
@@ -160,5 +165,11 @@ public class JumpWithBlackManTest {
         assertTrue(game.getBoard().at(from).hasPiece());
         assertEquals(Color.BLACK, game.getBoard().at(from).getPiece().getColor());
         assertFalse(game.getBoard().at(to).hasPiece());
+    }
+
+    @AfterEach
+    void tearDown() {
+        gameplayPanel.removeGame();
+        jFrame.getContentPane().remove(gameplayPanel);
     }
 }
