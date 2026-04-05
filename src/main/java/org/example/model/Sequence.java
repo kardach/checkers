@@ -2,6 +2,7 @@ package org.example.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Sequence {
     private final List<Move> moves;
@@ -18,10 +19,16 @@ public class Sequence {
             Position lastPosition;
             if(moves.isEmpty()) {
                 lastPosition = start;
+                moves.add(new Move(lastPosition, new Position(row, col)));
+
             } else {
                 lastPosition = moves.getLast().to();
+                if(moves.getLast().from().equals(new Position(row, col))) {
+                    moves.removeLast();
+                } else {
+                    moves.add(new Move(lastPosition, new Position(row, col)));
+                }
             }
-            moves.add(new Move(lastPosition, new Position(row, col)));
         }
     }
 

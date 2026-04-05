@@ -195,6 +195,7 @@ public class GameplayPanel extends JPanel {
                     @Override
                     public void itemStateChanged(ItemEvent e) {
                         if(e.getStateChange() == ItemEvent.SELECTED) {
+                            System.out.println(row + " " + col);
                             game.getSequence().add(row, col);
                             updateClickableSquares(row, col);
                             boardPanel.repaint();
@@ -214,7 +215,7 @@ public class GameplayPanel extends JPanel {
                 Square square = game.getBoard().at(row, col);
                 if (!square.hasPiece() || square.getPiece().getColor() != game.getTurn()
                         || game.getLegalMoves(row, col).isEmpty()) {
-//                    squareButtons[row][col].setEnabled(false);
+                    squareButtons[row][col].setEnabled(false);
                 } else {
                     squareButtons[row][col].setEnabled(true);
                     clickableButtons.add(squareButtons[row][col]);

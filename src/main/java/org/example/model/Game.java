@@ -93,6 +93,10 @@ public class Game {
     public List<Move> getLegalMoves(int fromRow, int fromCol) {
         List<Move> moves = new ArrayList<>();
         if (!board.at(fromRow, fromCol).hasPiece()) {
+            if (!sequence.isEmpty()) {
+                Move backtrack = new Move(new Position(fromRow, fromCol), sequence.getMoves().getLast().from());
+                moves.add(backtrack);
+            }
             return moves;
         }
         Piece piece = board.at(fromRow, fromCol).getPiece();
@@ -111,6 +115,14 @@ public class Game {
                 }
             }
         }
+
+        if(!sequence.getMoves().isEmpty()) {
+            Move backtrack = new Move(new Position(fromRow, fromCol), sequence.getMoves().getLast().from());
+            moves.add(backtrack);
+        }
+        System.out.println(moves);
+        System.out.println(sequence.getMoves());
+
         return moves;
     }
 
