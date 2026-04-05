@@ -80,11 +80,7 @@ public class GameplayPanel extends JPanel {
                 game.performMove();
                 arrowsPanel.repaint();
                 if(game.isFinished()) {
-                    if(game.getWinner() == org.example.model.Color.BLACK) {
-                        winnerLabel.setText("Black won");
-                    } else {
-                        winnerLabel.setText("White won");
-                    }
+                    winnerLabel.setText(game.getWinner() == org.example.model.Color.BLACK ? "Black won" : "White won");
                 }
                 setClickableSquares();
                 turnLabel.setText(game.getTurn().name());
@@ -173,8 +169,9 @@ public class GameplayPanel extends JPanel {
     }
 
     private JPanel getBoardPanel(Game game) {
-        JPanel boardPanel = new JPanel(new BoardLayout(10, 10));
-        boardPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 0));
+        int boardSize = game.getBoard().getSize();
+        JPanel boardPanel = new JPanel(new BoardLayout(boardSize, boardSize));
+        boardPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 5));
         addSquareButtons(boardPanel, game);
         setClickableSquares();
 
@@ -198,26 +195,7 @@ public class GameplayPanel extends JPanel {
                 squareButton.setUI(ui);
                 squareButton.setBorderPainted(false);
                 squareButton.setRolloverEnabled(false);
-                squareButton.addItemListener(new ItemListener() {
-                    private int row;
-                    private int col;
-
-                    public ItemListener init(int row, int col) {
-                        this.row = row;
-                        this.col = col;
-                        return this;
-                    }
-
-                    @Override
-                    public void itemStateChanged(ItemEvent e) {
-                        if(e.getStateChange() == ItemEvent.SELECTED) {
-                            System.out.println(row + " " + col);
-                            game.getSequence().add(row, col);
-                            updateClickableSquares(row, col);
-                            boardPanel.repaint();
-                        }
-                    }
-                }.init(row, col));
+                squareButton.addItemListener(new SquareButtonItemListener(game, boardPanel, row, col));
                 boardPanel.add(squareButton);
                 squareGroup.add(squareButton);
                 squareButtons[row][col] = squareButton;
@@ -385,6 +363,30 @@ public class GameplayPanel extends JPanel {
             ButtonModel model = b.getModel();
             Dimension size = c.getSize();
             paint(g, size, model);
+        }
+    }
+
+    private class SquareButtonItemListener implements ItemListener {
+        private final Game game;
+        private final JPanel boardPanel;
+        private final int row;
+        private final int col;
+
+        public SquareButtonItemListener(Game game, JPanel boardPanel, int row, int col) {
+            this.game = game;
+            this.boardPanel = boardPanel;
+            this.row = row;
+            this.col = col;
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if(e.getStateChange() == ItemEvent.SELECTED) {
+                System.out.println(row + " " + col);
+                game.getSequence().add(row, col);
+                updateClickableSquares(row, col);
+                boardPanel.repaint();
+            }
         }
     }
 }
