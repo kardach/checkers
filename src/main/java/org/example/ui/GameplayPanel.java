@@ -20,6 +20,8 @@ public class GameplayPanel extends JPanel {
     private ButtonGroup squareGroup;
     private JButton confirmButton;
     private JButton quitButton;
+    private JLabel variantNameLabel;
+    private JLabel turnLabel;
     private JLabel winnerLabel;
     private Game game;
 
@@ -43,6 +45,8 @@ public class GameplayPanel extends JPanel {
         arrowsPanel = getArrowsPanel();
         containerPane.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
         containerPane.add(arrowsPanel, JLayeredPane.PALETTE_LAYER);
+        variantNameLabel.setText(game.getName());
+        turnLabel.setText(game.getTurn().name());
     }
 
     public void removeGame() {
@@ -51,6 +55,8 @@ public class GameplayPanel extends JPanel {
         containerPane.remove(arrowsPanel);
         boardPanel = null;
         arrowsPanel = null;
+        variantNameLabel.setText("");
+        turnLabel.setText("");
     }
 
     public JButton getConfirmButton() {
@@ -81,17 +87,27 @@ public class GameplayPanel extends JPanel {
                     }
                 }
                 setClickableSquares();
+                turnLabel.setText(game.getTurn().name());
             }
         });
 
         quitButton = new JButton("Quit button");
         quitButton.setFont(new Font("Dialog", Font.BOLD, 18));
 
+        variantNameLabel = new JLabel();
+        variantNameLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+
+        turnLabel = new JLabel();
+        turnLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+
+
         winnerLabel = new JLabel();
         winnerLabel.setFont(new Font("Dialog", Font.BOLD, 18));
 
         buttonsPanel.add(confirmButton);
         buttonsPanel.add(quitButton);
+        buttonsPanel.add(variantNameLabel);
+        buttonsPanel.add(turnLabel);
         buttonsPanel.add(winnerLabel);
         buttonsPanel.add(Box.createVerticalGlue());
 

@@ -1,8 +1,6 @@
 package org.example.options;
 
 import org.example.model.*;
-import org.example.validators.CaptureValidator;
-import org.example.validators.JumpValidator;
 
 import java.util.*;
 

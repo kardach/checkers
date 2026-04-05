@@ -35,6 +35,10 @@ public class Game {
         this.kingsRange = flyingKings ? board.getSize() : 2;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public boolean isFinished() {
         return winner != null;
     }
