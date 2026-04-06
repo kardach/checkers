@@ -5,14 +5,10 @@ import org.example.model.Color;
 import org.example.options.GameBuilder;
 import org.example.ui.GameplayPanel;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,40 +16,39 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JumpWithWhiteManTest {
     private static JFrame jFrame;
-    private GameplayPanel gameplayPanel;
+    private static GameplayPanel gameplayPanel;
     private static ArrayList<CustomPiecePlacement> customPiecePlacements;
-    private Game game;
-    private static Robot robot;
+    private static GameBuilder gameBuilder;
+    private static Game game;
 
     @BeforeAll
-    static void initAll() throws AWTException {
+    static void initAll() {
         jFrame = new JFrame("Checkers");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setSize(640, 480);
-        jFrame.setVisible(true);
 
         CardLayout cardLayout = new CardLayout();
         jFrame.getContentPane().setLayout(cardLayout);
+
+        gameplayPanel = new GameplayPanel();
+        jFrame.getContentPane().add("GAMEPLAY", gameplayPanel);
 
         customPiecePlacements = new ArrayList<>(List.of(
                 new CustomPiecePlacement(Color.WHITE, Type.MAN, 1, 1)
         ));
 
-        robot = new Robot();
+        gameBuilder = getGameBuilder();
+
+        jFrame.setVisible(true);
     }
 
     @BeforeEach
     void init() {
-        var gameBuilder = getGameBuilder();
         game = gameBuilder.build();
-
-        gameplayPanel = new GameplayPanel();
         gameplayPanel.setGame(game);
-
-        jFrame.getContentPane().add("GAMEPLAY", gameplayPanel);
     }
 
-    private @NonNull GameBuilder getGameBuilder() {
+    private static @NonNull GameBuilder getGameBuilder() {
         var gameBuilder = new GameBuilder();
         gameBuilder.setName("""
                 <html>
@@ -77,36 +72,16 @@ public class JumpWithWhiteManTest {
         return gameBuilder;
     }
 
-    void clickSquareButton(int row, int col) {
-        Point point = gameplayPanel.getSquareButton(row, col).getLocationOnScreen();
-        point.x += gameplayPanel.getSquareButton(row, col).getWidth() / 2;
-        point.y += gameplayPanel.getSquareButton(row, col).getHeight() / 2;
-        robot.mouseMove(point.x, point.y);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-    }
-
-    void clickConfirmButton() {
-        Point point = gameplayPanel.getConfirmButton().getLocationOnScreen();
-        point.x += gameplayPanel.getConfirmButton().getWidth() / 2;
-        point.y += gameplayPanel.getConfirmButton().getHeight() / 2;
-        robot.mouseMove(point.x, point.y);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-    }
-    
     @Test
-    void jumpToTopLeftWith() throws InterruptedException {
+    void jumpToTopLeft() {
         Position from = new Position(1, 1);
         Position to = new Position(0, 0);
         ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
         for(Move move : moves) {
-            clickSquareButton(move.from().row(), move.from().col());
-            clickSquareButton(move.to().row(), move.to().col());
-            clickConfirmButton();
+            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+            gameplayPanel.getConfirmButton().doClick();
         }
-
-        Thread.sleep(5000);
 
         assertTrue(game.getBoard().at(from).hasPiece());
         assertEquals(Color.WHITE, game.getBoard().at(from).getPiece().getColor());
@@ -114,17 +89,15 @@ public class JumpWithWhiteManTest {
     }
 
     @Test
-    void jumpToTopRightWith() throws InterruptedException {
+    void jumpToTopRight() {
         Position from = new Position(1, 1);
         Position to = new Position(0, 2);
         ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
         for(Move move : moves) {
-            clickSquareButton(move.from().row(), move.from().col());
-            clickSquareButton(move.to().row(), move.to().col());
-            clickConfirmButton();
+            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+            gameplayPanel.getConfirmButton().doClick();
         }
-
-        Thread.sleep(5000);
 
         assertTrue(game.getBoard().at(from).hasPiece());
         assertEquals(Color.WHITE, game.getBoard().at(from).getPiece().getColor());
@@ -132,17 +105,15 @@ public class JumpWithWhiteManTest {
     }
 
     @Test
-    void jumpToBottomLeftWith() throws InterruptedException {
+    void jumpToBottomLeft() {
         Position from = new Position(1, 1);
         Position to = new Position(2, 0);
         ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
         for(Move move : moves) {
-            clickSquareButton(move.from().row(), move.from().col());
-            clickSquareButton(move.to().row(), move.to().col());
-            clickConfirmButton();
+            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+            gameplayPanel.getConfirmButton().doClick();
         }
-
-        Thread.sleep(5000);
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertTrue(game.getBoard().at(to).hasPiece());
@@ -150,17 +121,15 @@ public class JumpWithWhiteManTest {
     }
 
     @Test
-    void jumpToBottonRightWith() throws InterruptedException {
+    void jumpToBottonRight() {
         Position from = new Position(1, 1);
         Position to = new Position(2, 2);
         ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
         for(Move move : moves) {
-            clickSquareButton(move.from().row(), move.from().col());
-            clickSquareButton(move.to().row(), move.to().col());
-            clickConfirmButton();
+            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+            gameplayPanel.getConfirmButton().doClick();
         }
-
-        Thread.sleep(5000);
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertTrue(game.getBoard().at(to).hasPiece());
@@ -169,7 +138,11 @@ public class JumpWithWhiteManTest {
 
     @AfterEach
     void tearDown() {
-        gameplayPanel.removeGame();
-        jFrame.getContentPane().remove(gameplayPanel);
+       gameplayPanel.removeGame();
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        jFrame.dispose();
     }
 }

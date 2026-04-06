@@ -50,11 +50,11 @@ public class GameplayPanel extends JPanel {
     }
 
     public void removeGame() {
-        this.game = null;
         containerPane.remove(boardPanel);
         containerPane.remove(arrowsPanel);
         boardPanel = null;
         arrowsPanel = null;
+        game = null;
         variantNameLabel.setText("");
         turnLabel.setText("");
     }
