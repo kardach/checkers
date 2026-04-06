@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.model.Game;
 import org.example.options.GameVariantSetup;
 import org.example.ui.GameplayPanel;
 import org.example.ui.OptionsPanel;
@@ -105,59 +104,21 @@ public class Main {
         });
     }
 
-//    public GameplayPanel getGameplayPanel() {
-//        return gameplayPanel;
-//    }
-
     public Main() {
         jFrame = new JFrame("Checkers");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setSize(640, 480);
 
         gameVariantSetup = new GameVariantSetup();
+    }
 
+    void run() {
         addComponentsToPane(jFrame.getContentPane());
 
         jFrame.setVisible(true);
     }
 
     void main() {
-//        GameVariantSetup gameVariantSetup = new GameVariantSetup();
-//        GameWindow gameWindow = new GameWindow();
-//
-//        WelcomePanel welcomePanel = new WelcomePanel(gameWindow);
-//        NewGamePanel newGamePanel = new NewGamePanel(gameVariantSetup);
-//        GameplayPanel gameplayPanel = new GameplayPanel(gameVariantSetup);
-//
-//        gameWindow.add(welcomePanel);
-//        gameWindow.add(newGamePanel);
-//        gameWindow.add(gameplayPanel);
-//        gameWindow.display();
-
-        //            Robot robot;
-        //            try {
-        //                robot = new Robot();
-        //            } catch (AWTException e) {
-        //                throw new RuntimeException(e);
-        //            }
-        //            int[] rows = {9, 8, 0, 1, 8, 7, 1, 2, 7, 6, 2, 3, 6, 5, 3, 4, 5, 4, 4, 5, 4, 3, 5, 6, 3, 2, 6, 7, 2, 1, 7, 8, 1, 0, 8, 9};
-        //            int[] cols = {8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1, 8, 9, 1, 0, 9, 8, 0, 1};
-        //            for(int i = 0; i < 36; i++) {
-        //                Point point = getGameplayPanel().getSquareButton(rows[i], cols[i]).getLocationOnScreen();
-        //                point.x += getGameplayPanel().getSquareButton(rows[i], cols[i]).getWidth() / 2;
-        //                point.y += getGameplayPanel().getSquareButton(rows[i], cols[i]).getHeight() / 2;
-        //                robot.mouseMove(point.x, point.y);
-        //                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        //                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-        //                if(i % 2 == 1) {
-        //                    point = getGameplayPanel().getConfirmButton().getLocationOnScreen();
-        //                    point.x += getGameplayPanel().getConfirmButton().getWidth() / 2;
-        //                    point.y += getGameplayPanel().getConfirmButton().getHeight() / 2;
-        //                    robot.mouseMove(point.x, point.y);
-        //                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        //                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-        //                }
-        //            }
-//        SwingUtilities.invokeLater(Main::new);
+        SwingUtilities.invokeLater(Main.this::run);
     }
 }
