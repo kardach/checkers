@@ -5,10 +5,7 @@ import org.example.model.Color;
 import org.example.options.GameBuilder;
 import org.example.ui.GameplayPanel;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,8 +108,6 @@ public class CaptureWithWhiteManTest {
             clickConfirmButton();
         }
 
-        Thread.sleep(5000);
-
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());
         assertTrue(game.getBoard().at(to).hasPiece());
@@ -130,8 +125,6 @@ public class CaptureWithWhiteManTest {
             clickSquareButton(move.to().row(), move.to().col());
             clickConfirmButton();
         }
-
-        Thread.sleep(5000);
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());
@@ -151,8 +144,6 @@ public class CaptureWithWhiteManTest {
             clickConfirmButton();
         }
 
-        Thread.sleep(5000);
-
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());
         assertTrue(game.getBoard().at(to).hasPiece());
@@ -171,8 +162,6 @@ public class CaptureWithWhiteManTest {
             clickConfirmButton();
         }
 
-        Thread.sleep(5000);
-
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());
         assertTrue(game.getBoard().at(to).hasPiece());
@@ -183,5 +172,10 @@ public class CaptureWithWhiteManTest {
     void tearDown() {
         gameplayPanel.removeGame();
         jFrame.getContentPane().remove(gameplayPanel);
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        jFrame.dispose();
     }
 }
