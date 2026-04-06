@@ -382,7 +382,7 @@ public class GameplayPanel extends JPanel {
         @Override
         public void itemStateChanged(ItemEvent e) {
             if(e.getStateChange() == ItemEvent.SELECTED) {
-                System.out.println(row + " " + col);
+//                System.out.println(row + " " + col);
                 game.getSequence().add(row, col);
                 updateClickableSquares(row, col);
                 boardPanel.repaint();
