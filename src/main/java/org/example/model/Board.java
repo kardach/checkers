@@ -58,6 +58,18 @@ public class Board {
         whitePieces = piecesPerSide;
     }
 
+    public Board(Board board) {
+        this.size = board.size;
+        this.blackPieces = board.blackPieces;
+        this.whitePieces = board.whitePieces;
+        this.squares = new Square[size][size];
+        for(int row = 0; row < size; row++) {
+            for(int col = 0; col < size; col++) {
+                this.squares[row][col] = new Square(board.squares[row][col]);
+            }
+        }
+    }
+
     public int getSize() {
         return size;
     }

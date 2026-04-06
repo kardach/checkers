@@ -13,6 +13,13 @@ public class Square {
         this.piece = piece;
     }
 
+    public Square(Square square) {
+        this.color = square.color;
+        if(square.hasPiece()) {
+            this.piece = new Piece(square.getPiece());
+        }
+    }
+
     public Color getColor() {
         return color;
     }

@@ -40,6 +40,6 @@ public class GameBuilder {
     }
 
     public Game build() {
-        return new Game(name, board, firstMove, menCaptureBackwards, flyingKings, capture, crowning);
+        return new Game(name, new Board(board), firstMove, menCaptureBackwards, flyingKings, capture, crowning);
     }
 }
