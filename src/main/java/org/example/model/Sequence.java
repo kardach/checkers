@@ -12,6 +12,10 @@ public class Sequence {
         moves = new ArrayList<>();
     }
 
+    public void add(Position position) {
+        add(position.row(), position.col());
+    }
+
     public void add(int row, int col) {
         if(start == null) {
             start = new Position(row, col);

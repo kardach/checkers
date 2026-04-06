@@ -71,6 +71,10 @@ public class Game {
         return flyingKings;
     }
 
+    public List<Move> getLegalMoves(Position position) {
+        return getLegalMoves(position.row(), position.col());
+    }
+
     public List<Move> getLegalMoves(int fromRow, int fromCol) {
         List<Move> moves = new ArrayList<>();
         if (!board.at(fromRow, fromCol).hasPiece()) {
@@ -97,8 +101,8 @@ public class Game {
             }
         }
 
-        System.out.println(moves);
-        System.out.println(sequence.getMoves());
+//        System.out.println(moves);
+//        System.out.println(sequence.getMoves());
 
         return moves;
     }
