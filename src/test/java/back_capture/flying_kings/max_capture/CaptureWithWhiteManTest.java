@@ -2,8 +2,8 @@ package back_capture.flying_kings.max_capture;
 
 import org.example.model.*;
 import org.example.model.Color;
-import org.example.options.GameBuilder;
 import org.example.ui.GameplayPanel;
+import org.example.variants.GameBuilder;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
@@ -38,18 +38,11 @@ public class CaptureWithWhiteManTest {
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 1, 1),
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 1, 3),
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 3, 1),
-                new CustomPiecePlacement(Color.BLACK, Type.MAN, 3, 3)
-        ));
+                new CustomPiecePlacement(Color.BLACK, Type.MAN, 3, 3)));
 
         gameBuilder = getGameBuilder();
 
         jFrame.setVisible(true);
-    }
-
-    @BeforeEach
-    void init() {
-        game = gameBuilder.build();
-        gameplayPanel.setGame(game);
     }
 
     private static @NonNull GameBuilder getGameBuilder() {
@@ -76,17 +69,21 @@ public class CaptureWithWhiteManTest {
         return gameBuilder;
     }
 
-     @Test
+    @BeforeEach
+    void init() {
+        game = gameBuilder.build();
+        gameplayPanel.setGame(game);
+    }
+
+    @Test
     void CaptureToTopLeftWith() {
         Position from = new Position(2, 2);
         Position captured = new Position(1, 1);
         Position to = new Position(0, 0);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());
@@ -99,12 +96,10 @@ public class CaptureWithWhiteManTest {
         Position from = new Position(2, 2);
         Position captured = new Position(1, 3);
         Position to = new Position(0, 4);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());
@@ -117,12 +112,10 @@ public class CaptureWithWhiteManTest {
         Position from = new Position(2, 2);
         Position captured = new Position(3, 1);
         Position to = new Position(4, 0);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());
@@ -135,12 +128,10 @@ public class CaptureWithWhiteManTest {
         Position from = new Position(2, 2);
         Position captured = new Position(3, 3);
         Position to = new Position(4, 4);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertFalse(game.getBoard().at(captured).hasPiece());

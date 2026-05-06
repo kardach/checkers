@@ -2,7 +2,7 @@ package back_capture.flying_kings.max_capture;
 
 import org.example.model.*;
 import org.example.model.Color;
-import org.example.options.GameBuilder;
+import org.example.variants.GameBuilder;
 import org.example.ui.GameplayPanel;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
@@ -30,7 +30,7 @@ public class JumpWithWhiteManTest {
         CardLayout cardLayout = new CardLayout();
         jFrame.getContentPane().setLayout(cardLayout);
 
-        gameplayPanel = new GameplayPanel();
+    gameplayPanel = new GameplayPanel();
         jFrame.getContentPane().add("GAMEPLAY", gameplayPanel);
 
         customPiecePlacements = new ArrayList<>(List.of(
@@ -45,7 +45,7 @@ public class JumpWithWhiteManTest {
     @BeforeEach
     void init() {
         game = gameBuilder.build();
-        gameplayPanel.setGame(game);
+    gameplayPanel.setGame(game);
     }
 
     private static @NonNull GameBuilder getGameBuilder() {
@@ -76,12 +76,10 @@ public class JumpWithWhiteManTest {
     void jumpToTopLeft() {
         Position from = new Position(1, 1);
         Position to = new Position(0, 0);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertTrue(game.getBoard().at(from).hasPiece());
         assertEquals(Color.WHITE, game.getBoard().at(from).getPiece().getColor());
@@ -92,12 +90,10 @@ public class JumpWithWhiteManTest {
     void jumpToTopRight() {
         Position from = new Position(1, 1);
         Position to = new Position(0, 2);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertTrue(game.getBoard().at(from).hasPiece());
         assertEquals(Color.WHITE, game.getBoard().at(from).getPiece().getColor());
@@ -108,12 +104,10 @@ public class JumpWithWhiteManTest {
     void jumpToBottomLeft() {
         Position from = new Position(1, 1);
         Position to = new Position(2, 0);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertTrue(game.getBoard().at(to).hasPiece());
@@ -124,12 +118,10 @@ public class JumpWithWhiteManTest {
     void jumpToBottonRight() {
         Position from = new Position(1, 1);
         Position to = new Position(2, 2);
-        ArrayList<Move> moves = new ArrayList<>(List.of(new Move(from, to)));
-        for(Move move : moves) {
-            gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-            gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-            gameplayPanel.getConfirmButton().doClick();
-        }
+        Move move = new Move(from, to);
+        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
+        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+        gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
         assertTrue(game.getBoard().at(to).hasPiece());
@@ -138,7 +130,7 @@ public class JumpWithWhiteManTest {
 
     @AfterEach
     void tearDown() {
-       gameplayPanel.removeGame();
+   gameplayPanel.removeGame();
     }
 
     @AfterAll
