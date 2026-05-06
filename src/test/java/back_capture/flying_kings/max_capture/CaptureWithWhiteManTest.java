@@ -76,7 +76,7 @@ public class CaptureWithWhiteManTest {
     }
 
     @Test
-    void CaptureToTopLeftWith() {
+    void CaptureToTopLeft() {
         Position from = new Position(2, 2);
         Position captured = new Position(1, 1);
         Position to = new Position(0, 0);
@@ -92,7 +92,7 @@ public class CaptureWithWhiteManTest {
     }
 
     @Test
-    void CaptureToTopRightWith() {
+    void CaptureToTopRight() {
         Position from = new Position(2, 2);
         Position captured = new Position(1, 3);
         Position to = new Position(0, 4);
@@ -108,7 +108,7 @@ public class CaptureWithWhiteManTest {
     }
 
     @Test
-    void CaptureToBottomLeftWith() {
+    void CaptureToBottomLeft() {
         Position from = new Position(2, 2);
         Position captured = new Position(3, 1);
         Position to = new Position(4, 0);
@@ -124,7 +124,7 @@ public class CaptureWithWhiteManTest {
     }
 
     @Test
-    void CaptureToBottonRightWith() {
+    void CaptureToBottonRight() {
         Position from = new Position(2, 2);
         Position captured = new Position(3, 3);
         Position to = new Position(4, 4);
