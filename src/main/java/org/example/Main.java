@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.options.GameVariantSetup;
+import org.example.variants.GameVariantSetup;
 import org.example.ui.GameplayPanel;
 import org.example.ui.OptionsPanel;
 import org.example.ui.WelcomePanel;

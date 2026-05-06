@@ -1,4 +1,4 @@
-package org.example.options;
+package org.example.variants;
 
 public enum GameVariant {
     INTERNATIONAL,

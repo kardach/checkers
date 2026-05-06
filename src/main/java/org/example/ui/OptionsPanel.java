@@ -1,6 +1,6 @@
 package org.example.ui;
 
-import org.example.options.GameVariantSetup;
+import org.example.variants.GameVariantSetup;
 
 import javax.swing.*;
 import java.awt.*;

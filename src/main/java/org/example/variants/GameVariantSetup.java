@@ -1,4 +1,4 @@
-package org.example.options;
+package org.example.variants;
 
 import org.example.model.*;
 
