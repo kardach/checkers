@@ -82,6 +82,7 @@ public class CaptureWithBlackManTest {
         Position captured = new Position(1, 1);
         Position to = new Position(0, 0);
         Move move = new Move(from, to);
+
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();
@@ -98,6 +99,7 @@ public class CaptureWithBlackManTest {
         Position captured = new Position(1, 3);
         Position to = new Position(0, 4);
         Move move = new Move(from, to);
+
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();
@@ -114,6 +116,7 @@ public class CaptureWithBlackManTest {
         Position captured = new Position(3, 1);
         Position to = new Position(4, 0);
         Move move = new Move(from, to);
+
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();
@@ -130,6 +133,7 @@ public class CaptureWithBlackManTest {
         Position captured = new Position(3, 3);
         Position to = new Position(4, 4);
         Move move = new Move(from, to);
+
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();

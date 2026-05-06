@@ -77,6 +77,7 @@ public class JumpWithWhiteManTest {
         Position from = new Position(1, 1);
         Position to = new Position(0, 0);
         Move move = new Move(from, to);
+        
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();
@@ -91,6 +92,7 @@ public class JumpWithWhiteManTest {
         Position from = new Position(1, 1);
         Position to = new Position(0, 2);
         Move move = new Move(from, to);
+        
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();
@@ -105,6 +107,7 @@ public class JumpWithWhiteManTest {
         Position from = new Position(1, 1);
         Position to = new Position(2, 0);
         Move move = new Move(from, to);
+        
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();
@@ -119,6 +122,7 @@ public class JumpWithWhiteManTest {
         Position from = new Position(1, 1);
         Position to = new Position(2, 2);
         Move move = new Move(from, to);
+        
         gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
         gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
         gameplayPanel.getConfirmButton().doClick();
