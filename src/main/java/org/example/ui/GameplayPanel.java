@@ -182,6 +182,10 @@ public class GameplayPanel extends JPanel {
         return squareButtons[row][col];
     }
 
+    public JRadioButton getSquareButton(Position position) {
+        return squareButtons[position.row()][position.col()];
+    }
+
     private void addSquareButtons(JPanel boardPanel, Game game) {
         int boardSize = game.getBoard().getSize();
         squareButtons = new JRadioButton[boardSize][boardSize];
