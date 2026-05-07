@@ -6,6 +6,9 @@ import org.example.variants.GameBuilder;
 import org.example.ui.GameplayPanel;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 public class JumpWithBlackManTest {
     private static JFrame jFrame;
@@ -72,14 +76,27 @@ public class JumpWithBlackManTest {
         return gameBuilder;
     }
 
-    @Test
-    void jumpToTopLeft() {
+    private static List<Arguments> providePositionForForwardJump() {
         Position from = new Position(1, 1);
-        Position to = new Position(0, 0);
-        Move move = new Move(from ,to);
+        return List.of(
+                argumentSet("TopLeft", from, new Position(0, 0)),
+                argumentSet("TopRight", from, new Position(0, 2))
+        );
+    }
 
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+    private static List<Arguments> providePositionForBackwardJump() {
+        Position from = new Position(1, 1);
+        return List.of(
+                argumentSet("BottomLeft", from, new Position(2, 0)),
+                argumentSet("BottomRight", from, new Position(2, 2))
+        );
+    }
+
+    @ParameterizedTest(name = "{argumentSetName} from={0} to={1}")
+    @MethodSource("providePositionForForwardJump")
+    void forwardJump(Position from, Position to) {
+        gameplayPanel.getSquareButton(from).doClick();
+        gameplayPanel.getSquareButton(to).doClick();
         gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
@@ -87,49 +104,16 @@ public class JumpWithBlackManTest {
         assertEquals(Color.BLACK, game.getBoard().at(to).getPiece().getColor());
     }
 
-    @Test
-    void jumpToTopRight() {
-        Position from = new Position(1, 1);
-        Position to = new Position(0, 2);
-        Move move = new Move(from, to);
-
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-        gameplayPanel.getConfirmButton().doClick();
-
-        assertFalse(game.getBoard().at(from).hasPiece());
-        assertTrue(game.getBoard().at(to).hasPiece());
-        assertEquals(Color.BLACK, game.getBoard().at(to).getPiece().getColor());
-    }
-
-    @Test
-    void jumpToBottomLeft() {
-        Position from = new Position(1, 1);
-        Position to = new Position(2, 0);
-        Move move = new Move(from ,to);
-
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+    @ParameterizedTest(name = "{argumentSetName} from={0} to={1}")
+    @MethodSource("providePositionForBackwardJump")
+    void backwardJump(Position from, Position to) {
+        gameplayPanel.getSquareButton(from).doClick();
+        gameplayPanel.getSquareButton(to).doClick();
         gameplayPanel.getConfirmButton().doClick();
 
         assertTrue(game.getBoard().at(from).hasPiece());
-        assertEquals(Color.BLACK, game.getBoard().at(from).getPiece().getColor());
         assertFalse(game.getBoard().at(to).hasPiece());
-    }
-
-    @Test
-    void jumpToBottonRight() {
-        Position from = new Position(1, 1);
-        Position to = new Position(2, 2);
-        Move move = new Move(from ,to);
-
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-        gameplayPanel.getConfirmButton().doClick();
-
-        assertTrue(game.getBoard().at(from).hasPiece());
         assertEquals(Color.BLACK, game.getBoard().at(from).getPiece().getColor());
-        assertFalse(game.getBoard().at(to).hasPiece());
     }
 
     @AfterEach

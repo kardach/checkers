@@ -6,13 +6,18 @@ import org.example.variants.GameBuilder;
 import org.example.ui.GameplayPanel;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 public class CaptureWithBlackManTest {
     private static JFrame jFrame;
@@ -76,66 +81,21 @@ public class CaptureWithBlackManTest {
         return gameBuilder;
     }
 
-    @Test
-    void CaptureToTopLeft() {
+    private static List<Arguments> providePositionsForCapture() {
         Position from = new Position(2, 2);
-        Position captured = new Position(1, 1);
-        Position to = new Position(0, 0);
-        Move move = new Move(from, to);
-
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-        gameplayPanel.getConfirmButton().doClick();
-
-        assertFalse(game.getBoard().at(from).hasPiece());
-        assertFalse(game.getBoard().at(captured).hasPiece());
-        assertTrue(game.getBoard().at(to).hasPiece());
-        assertEquals(Color.BLACK, game.getBoard().at(to).getPiece().getColor());
+        return List.of(
+                argumentSet("TopLeft", from, new Position(1, 1), new Position(0, 0)),
+                argumentSet("TopRight", from, new Position(1, 3), new Position(0, 4)),
+                argumentSet("BottomLeft", from, new Position(3, 1), new Position(4, 0)),
+                argumentSet("BottomRight", from, new Position(3, 3), new Position(4, 4))
+        );
     }
 
-    @Test
-    void CaptureToTopRight() {
-        Position from = new Position(2, 2);
-        Position captured = new Position(1, 3);
-        Position to = new Position(0, 4);
-        Move move = new Move(from, to);
-
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-        gameplayPanel.getConfirmButton().doClick();
-
-        assertFalse(game.getBoard().at(from).hasPiece());
-        assertFalse(game.getBoard().at(captured).hasPiece());
-        assertTrue(game.getBoard().at(to).hasPiece());
-        assertEquals(Color.BLACK, game.getBoard().at(to).getPiece().getColor());
-    }
-
-    @Test
-    void CaptureToBottomLeft() {
-        Position from = new Position(2, 2);
-        Position captured = new Position(3, 1);
-        Position to = new Position(4, 0);
-        Move move = new Move(from, to);
-
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-        gameplayPanel.getConfirmButton().doClick();
-
-        assertFalse(game.getBoard().at(from).hasPiece());
-        assertFalse(game.getBoard().at(captured).hasPiece());
-        assertTrue(game.getBoard().at(to).hasPiece());
-        assertEquals(Color.BLACK, game.getBoard().at(to).getPiece().getColor());
-    }
-
-    @Test
-    void CaptureToBottonRight() {
-        Position from = new Position(2, 2);
-        Position captured = new Position(3, 3);
-        Position to = new Position(4, 4);
-        Move move = new Move(from, to);
-
-        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
+    @ParameterizedTest(name = "{argumentSetName} from={0} captured={1} to={2}")
+    @MethodSource("providePositionsForCapture")
+    void capture(Position from, Position captured, Position to) {
+        gameplayPanel.getSquareButton(from).doClick();
+        gameplayPanel.getSquareButton(to).doClick();
         gameplayPanel.getConfirmButton().doClick();
 
         assertFalse(game.getBoard().at(from).hasPiece());
