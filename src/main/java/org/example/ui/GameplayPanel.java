@@ -332,6 +332,13 @@ public class GameplayPanel extends JPanel {
                     size.width - 2 * borderThickness, size.height / 2 - 2 * borderThickness);
         }
 
+        private void paintClickableIndicator(Graphics2D g2, Dimension size) {
+            g2.setColor(Color.GREEN);
+            int indicatorWidth = size.width / 6;
+            int indicatorHeight = size.height / 6;
+            g2.fillOval(size.width / 2 - indicatorWidth / 2, size.height / 2 - indicatorHeight / 2, indicatorWidth, indicatorHeight);
+        }
+
         private void paint(Graphics g, Dimension size, ButtonModel model) {
             Color squareColor;
             Graphics2D g2 = (Graphics2D) g;
@@ -353,6 +360,10 @@ public class GameplayPanel extends JPanel {
                 } else {
                     paintKing(g2, size);
                 }
+            }
+
+            if(model.isEnabled()) {
+                paintClickableIndicator(g2, size);
             }
         }
 
