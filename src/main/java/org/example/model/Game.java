@@ -81,6 +81,23 @@ public class Game {
             if (!sequence.isEmpty()) {
                 Move backtrack = new Move(new Position(fromRow, fromCol), sequence.getMoves().getLast().from());
                 moves.add(backtrack);
+
+                Piece piece = board.at(sequence.getStart()).getPiece();
+                Position[] diagonals = {new Position(1, 1), new Position(1, -1),
+                        new Position(-1, 1), new Position(-1, -1)};
+                int multiplierMax = piece.getType() == Type.MAN ? 2 : kingsRange;
+                board.at(fromRow, fromCol).placePiece(new Piece(piece));
+                for(int i = 0; i < 4; i++) {
+                    for(int multiplier = 1 ; multiplier <= multiplierMax; multiplier++) {
+                        int toRow = fromRow + diagonals[i].row() * multiplier;
+                        int toCol = fromCol + diagonals[i].col() * multiplier;
+                        Move possibleMove = new Move(new Position(fromRow, fromCol), new Position(toRow, toCol));
+                        if(!possibleMove.equals(backtrack) && CaptureValidator.validate(this, possibleMove)) {
+                            moves.add(possibleMove);
+                        }
+                    }
+                }
+                board.at(fromRow, fromCol).removePiece();
             }
             return moves;
         }
