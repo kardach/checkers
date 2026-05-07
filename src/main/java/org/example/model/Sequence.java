@@ -1,5 +1,6 @@
 package org.example.model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,6 +48,10 @@ public class Sequence {
 
     public boolean isEmpty() {
         return moves.isEmpty();
+    }
+
+    public boolean contains(Move other) {
+        return moves.stream().anyMatch(move -> move.equals(other));
     }
 
     public Position getStart() {

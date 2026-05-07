@@ -329,53 +329,49 @@ public class MultiCaptureWithBlackManTest {
         assertEquals(Color.BLACK, game.getBoard().at(secondTo).getPiece().getColor());
     }
 
-//    @Test
-//    void CaptureToTopRight() {
-//        Position from = new Position(4, 4);
-//        Position firstCaptured = new Position(1, 3);
-//        Position firstTo =  new Position(0, 4);
-//        Move move = new Move(from, firstTo);
-//        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-//        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-//        gameplayPanel.getConfirmButton().doClick();
-//
-//        assertFalse(game.getBoard().at(from).hasPiece());
-//        assertFalse(game.getBoard().at(firstCaptured).hasPiece());
-//        assertTrue(game.getBoard().at(firstTo).hasPiece());
-//        assertEquals(Color.BLACK, game.getBoard().at(firstTo).getPiece().getColor());
-//    }
-//
-//    @Test
-//    void CaptureToBottomLeft() {
-//        Position from = new Position(4, 4);
-//        Position firstCaptured = new Position(3, 1);
-//        Position firstTo =  new Position(4, 0);
-//        Move move = new Move(from, firstTo);
-//        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-//        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-//        gameplayPanel.getConfirmButton().doClick();
-//
-//        assertFalse(game.getBoard().at(from).hasPiece());
-//        assertFalse(game.getBoard().at(firstCaptured).hasPiece());
-//        assertTrue(game.getBoard().at(firstTo).hasPiece());
-//        assertEquals(Color.BLACK, game.getBoard().at(firstTo).getPiece().getColor());
-//    }
-//
-//    @Test
-//    void CaptureToBottonRight() {
-//        Position from = new Position(4, 4);
-//        Position firstCaptured = new Position(3, 3);
-//        Position firstTo =  new Position(4, 4);
-//        Move move = new Move(from, firstTo);
-//        gameplayPanel.getSquareButton(move.from().row(), move.from().col()).doClick();
-//        gameplayPanel.getSquareButton(move.to().row(), move.to().col()).doClick();
-//        gameplayPanel.getConfirmButton().doClick();
-//
-//        assertFalse(game.getBoard().at(from).hasPiece());
-//        assertFalse(game.getBoard().at(firstCaptured).hasPiece());
-//        assertTrue(game.getBoard().at(firstTo).hasPiece());
-//        assertEquals(Color.BLACK, game.getBoard().at(firstTo).getPiece().getColor());
-//    }
+    @Test
+    void CaptureTopClockwiseCircular() {
+        Position[] jumpList = {new Position(4, 4), new Position(2, 2),
+                new Position(0, 4), new Position(2, 6)};
+        Position[] capturedList = {new Position(3, 3), new Position(1 , 3),
+                new Position(1, 5), new Position(3, 5)};
+
+        for (Position jump : jumpList) {
+            gameplayPanel.getSquareButton(jump).doClick();
+        }
+        gameplayPanel.getSquareButton(jumpList[0]).doClick();
+        gameplayPanel.getConfirmButton().doClick();
+
+        for (Position captured : capturedList) {
+            assertFalse(game.getBoard().at(captured).hasPiece());
+        }
+        for (int i = 1; i < jumpList.length; i++) {
+            assertFalse(game.getBoard().at(jumpList[i]).hasPiece());
+        }
+        assertEquals(Color.BLACK, game.getBoard().at(jumpList[0]).getPiece().getColor());
+    }
+
+    @Test
+    void CaptureAlreadyCapturedPiece() {
+        Position[] jumpList = {new Position(4, 4), new Position(2, 2),
+                new Position(0, 4), new Position(2, 6)};
+        Position[] capturedList = {new Position(3, 3), new Position(1 , 3),
+                new Position(1, 5), new Position(3, 5)};
+
+        for (int i = 0; i < 5; i++) {
+            IO.println(i);
+            gameplayPanel.getSquareButton(jumpList[i % 4]).doClick();
+        }
+        gameplayPanel.getConfirmButton().doClick();
+
+        for (Position captured : capturedList) {
+            assertFalse(game.getBoard().at(captured).hasPiece());
+        }
+        for (int i = 1; i < jumpList.length; i++) {
+            assertFalse(game.getBoard().at(jumpList[i]).hasPiece());
+        }
+        assertEquals(Color.BLACK, game.getBoard().at(jumpList[0]).getPiece().getColor());
+    }
 
     @AfterEach
     void tearDown() {
