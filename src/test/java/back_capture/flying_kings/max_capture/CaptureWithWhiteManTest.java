@@ -1,11 +1,13 @@
 package back_capture.flying_kings.max_capture;
 
+import extension.GameplaySetupExtension;
 import org.example.model.*;
 import org.example.model.Color;
 import org.example.ui.GameplayPanel;
 import org.example.variants.GameBuilder;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,34 +21,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 public class CaptureWithWhiteManTest {
-    private static JFrame jFrame;
-    private static GameplayPanel gameplayPanel;
-    private static ArrayList<CustomPiecePlacement> customPiecePlacements;
-    private static GameBuilder gameBuilder;
-    private Game game;
 
-    @BeforeAll
-    static void initAll() {
-        jFrame = new JFrame("Checkers");
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setSize(640, 480);
+    @RegisterExtension
+    static GameplaySetupExtension checkersResource = new GameplaySetupExtension(getGameBuilder());
 
-        CardLayout cardLayout = new CardLayout();
-        jFrame.getContentPane().setLayout(cardLayout);
-
-        gameplayPanel = new GameplayPanel();
-        jFrame.getContentPane().add("GAMEPLAY", gameplayPanel);
-
-        customPiecePlacements = new ArrayList<>(List.of(
+    private static @NonNull ArrayList<CustomPiecePlacement> getCustomPiecePlacements() {
+        return new ArrayList<>(List.of(
                 new CustomPiecePlacement(Color.WHITE, Type.MAN, 2, 2),
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 1, 1),
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 1, 3),
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 3, 1),
                 new CustomPiecePlacement(Color.BLACK, Type.MAN, 3, 3)));
-
-        gameBuilder = getGameBuilder();
-
-        jFrame.setVisible(true);
     }
 
     private static @NonNull GameBuilder getGameBuilder() {
@@ -64,19 +49,13 @@ public class CaptureWithWhiteManTest {
                 </body>
                 </html>
                 """);
-        gameBuilder.setBoard(new Board(5, true, customPiecePlacements));
+        gameBuilder.setBoard(new Board(5, true, getCustomPiecePlacements()));
         gameBuilder.setFirstMove(Color.WHITE);
         gameBuilder.setMenCaptureBackwards(true);
         gameBuilder.setFlyingKings(true);
         gameBuilder.setCapture(Capture.MAX);
         gameBuilder.setCrowning(Crowning.ON_FINISH);
         return gameBuilder;
-    }
-
-    @BeforeEach
-    void init() {
-        game = gameBuilder.build();
-        gameplayPanel.setGame(game);
     }
 
     private static List<Arguments> providePositionsForCapture() {
@@ -92,23 +71,13 @@ public class CaptureWithWhiteManTest {
     @ParameterizedTest(name = "{argumentSetName} from={0} captured={1} to={2}")
     @MethodSource("providePositionsForCapture")
     void capture(Position from, Position captured, Position to) {
-        gameplayPanel.getSquareButton(from).doClick();
-        gameplayPanel.getSquareButton(to).doClick();
-        gameplayPanel.getConfirmButton().doClick();
+        checkersResource.getGameplayPanel().getSquareButton(from).doClick();
+        checkersResource.getGameplayPanel().getSquareButton(to).doClick();
+        checkersResource.getGameplayPanel().getConfirmButton().doClick();
 
-        assertFalse(game.getBoard().at(from).hasPiece());
-        assertFalse(game.getBoard().at(captured).hasPiece());
-        assertTrue(game.getBoard().at(to).hasPiece());
-        assertEquals(Color.WHITE, game.getBoard().at(to).getPiece().getColor());
-    }
-
-    @AfterEach
-    void tearDown() {
-        gameplayPanel.removeGame();
-    }
-
-    @AfterAll
-    static void tearDownAll() {
-        jFrame.dispose();
+        assertFalse(checkersResource.getGame().getBoard().at(from).hasPiece());
+        assertFalse(checkersResource.getGame().getBoard().at(captured).hasPiece());
+        assertTrue(checkersResource.getGame().getBoard().at(to).hasPiece());
+        assertEquals(Color.WHITE, checkersResource.getGame().getBoard().at(to).getPiece().getColor());
     }
 }
