@@ -2,6 +2,8 @@ package extension;
 
 import org.example.model.CustomPiecePlacement;
 import org.example.model.Game;
+import org.example.model.Position;
+import org.example.model.Square;
 import org.example.ui.GameplayPanel;
 import org.example.variants.GameBuilder;
 import org.jspecify.annotations.NonNull;
@@ -11,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class GameplaySetupExtension
+public class GameplayHelperExtension
         implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
     private JFrame jFrame;
@@ -20,7 +22,25 @@ public class GameplaySetupExtension
     private GameBuilder gameBuilder;
     private Game game;
 
-    public GameplaySetupExtension(GameBuilder gameBuilder) {
+    public GameplayHelperExtension(GameBuilder gameBuilder) {
+        this.gameBuilder = gameBuilder;
+    }
+
+    public GameplayHelperExtension() {}
+
+    public void clickSquareButton(Position position) {
+        gameplayPanel.getSquareButton(position).doClick();
+    }
+
+    public void clickConfirmButton() {
+        gameplayPanel.getConfirmButton().doClick();
+    }
+
+    public Square getSquareAt(Position position) {
+        return game.getBoard().at(position);
+    }
+
+    public void setGameBuilder(GameBuilder gameBuilder) {
         this.gameBuilder = gameBuilder;
     }
 
