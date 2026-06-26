@@ -1,5 +1,7 @@
 package back_capture.flying_kings.max_capture;
 
+import org.example.generator.PiecePlacementGenerator;
+import org.example.generator.PositionSequenceGenerator;
 import org.example.model.*;
 import org.example.variants.GameBuilder;
 import org.jspecify.annotations.NonNull;
@@ -16,23 +18,15 @@ import extension.GameplayHelperExtension;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 public class JumpWithKingTest {
 
     @RegisterExtension
-    static GameplayHelperExtension gameplayHelperExtension = new GameplayHelperExtension();
+    static GameplayHelperExtension helper = new GameplayHelperExtension();
 
-    private static final Position from = new Position(3, 3);
+    private static final Position FROM = new Position(3, 3);
 
-    private static final List<Position> alliedMenPositions = new ArrayList<>(List.of(
-            new Position(1, 1),
-            new Position(1, 5),
-            new Position(5, 1),
-            new Position(5, 5)
-    ));
-
-    private static @NonNull GameBuilder getGameBuilder(Color color, ArrayList<CustomPiecePlacement> customPiecePlacements) {
+    private static @NonNull GameBuilder getGameBuilder(Color color, ArrayList<PiecePlacement> piecePlacements) {
         GameBuilder gameBuilder = new GameBuilder();
         gameBuilder.setName("""
                 <html>
@@ -47,7 +41,7 @@ public class JumpWithKingTest {
                 </body>
                 </html>
                 """.formatted(color));
-        gameBuilder.setBoard(new Board(7, true, customPiecePlacements));
+        gameBuilder.setBoard(new Board(7, true, piecePlacements));
         gameBuilder.setFirstMove(color);
         gameBuilder.setMenCaptureBackwards(true);
         gameBuilder.setFlyingKings(true);
@@ -70,10 +64,15 @@ public class JumpWithKingTest {
 
         @BeforeParameterizedClassInvocation
         void init() {
-            List<List<Position>> positionSequencesForNearJump = new PositionSequenceGenerator(from)
+            PositionSequenceGenerator generator = new PositionSequenceGenerator(FROM);
+
+            List<List<Position>> positionSequencesForNearJump = generator
                     .nextDiagonalDirections(1)
                     .generate();
-            List<List<Position>> positionSequencesForFarJump = new PositionSequenceGenerator(from)
+
+            generator.reset();
+
+            List<List<Position>> positionSequencesForFarJump = generator
                     .nextDiagonalDirections(3)
                     .generate();
 
@@ -84,7 +83,7 @@ public class JumpWithKingTest {
                 argumentsForFarJump.add(Arguments.of(positionSequencesForFarJump.get(i)));
             }
 
-            gameplayHelperExtension.setGameBuilder(getGameBuilder(color, new PiecePlacementGenerator()
+            helper.setGameBuilder(getGameBuilder(color, new PiecePlacementGenerator()
                     .forColor(color)
                     .generate()
             ));
@@ -94,40 +93,54 @@ public class JumpWithKingTest {
         @FieldSource({"argumentsForNearJump", "argumentsForFarJump"})
         void jump(List<Position> positions) {
             for(Position position : positions) {
-                gameplayHelperExtension.clickSquareButton(position);
+                helper.clickSquareButton(position);
             }
-            gameplayHelperExtension.clickConfirmButton();
+            helper.clickConfirmButton();
 
-            assertFalse(gameplayHelperExtension.getSquareAt(positions.getFirst()).hasPiece());
-            assertTrue(gameplayHelperExtension.getSquareAt(positions.getLast()).hasPiece());
-            assertEquals(color, gameplayHelperExtension.getSquareAt(positions.getLast()).getPiece().getColor());
+            assertFalse(helper.getSquareAt(positions.getFirst()).hasPiece());
+            assertTrue(helper.getSquareAt(positions.getLast()).hasPiece());
+            assertEquals(color, helper.getSquareAt(positions.getLast()).getPiece().getColor());
         }
     }
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    @ParameterizedClass(name = "Jump with {0} KING")
-    @EnumSource(Color.class)
-    class JumpOntoAlliedTest {
+    @ParameterizedClass(name = "Jump with {0} KING onto {1}")
+    @FieldSource("cartesianOfColors")
+    class JumpOntoTest {
 
-        @Parameter
+        Color[][] cartesianOfColors = {
+                {Color.BLACK, Color.BLACK},
+                {Color.BLACK, Color.WHITE},
+                {Color.WHITE, Color.BLACK},
+                {Color.WHITE, Color.WHITE}
+        };
+
+        @Parameter(0)
         Color color;
+
+        @Parameter(1)
+        Color otherColor;
 
         List<Arguments> arguments;
 
         @BeforeParameterizedClassInvocation
         void init() {
-            List<List<Position>> positionSequences = new PositionSequenceGenerator(from)
+            List<List<Position>> positionSequences = new PositionSequenceGenerator(FROM)
                     .nextDiagonalDirections(2)
                     .generate();
+
             arguments = new ArrayList<>();
             for (List<Position> positionSequence : positionSequences) {
                 arguments.add(Arguments.of(positionSequence));
             }
 
-            gameplayHelperExtension.setGameBuilder(getGameBuilder(color, new PiecePlacementGenerator()
-                    .setAllyMen(alliedMenPositions)
+            helper.setGameBuilder(getGameBuilder(color, new PiecePlacementGenerator()
                     .forColor(color)
+                    .setMen(Direction.getDiagonal()
+                            .stream()
+                            .map(direction -> FROM.translate(direction, 2))
+                            .toList(), otherColor)
                     .generate())
             );
         }
@@ -136,16 +149,15 @@ public class JumpWithKingTest {
         @FieldSource("arguments")
         void jump(List<Position> positions) {
             for(Position position : positions) {
-                gameplayHelperExtension.clickSquareButton(position);
+                helper.clickSquareButton(position);
             }
-            gameplayHelperExtension.clickConfirmButton();
+            helper.clickConfirmButton();
 
-            assertTrue(gameplayHelperExtension.getSquareAt(positions.getFirst()).hasPiece());
-            assertEquals(color, gameplayHelperExtension.getSquareAt(positions.getFirst()).getPiece().getColor());
+            assertTrue(helper.getSquareAt(positions.getFirst()).hasPiece());
+            assertEquals(color, helper.getSquareAt(positions.getFirst()).getPiece().getColor());
 
-            assertTrue(gameplayHelperExtension.getSquareAt(positions.getLast()).hasPiece());
-            assertEquals(color, gameplayHelperExtension.getSquareAt(positions.getLast()).getPiece().getColor());
+            assertTrue(helper.getSquareAt(positions.getLast()).hasPiece());
+            assertEquals(otherColor, helper.getSquareAt(positions.getLast()).getPiece().getColor());
         }
     }
-
 }

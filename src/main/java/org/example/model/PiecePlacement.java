@@ -1,7 +1,3 @@
 package org.example.model;
 
-public enum PiecePlacement {
-    ON_BLACK,
-    ON_WHITE,
-    CUSTOM,
-}
+public record PiecePlacement(Color color, Type type, int row, int col) {}

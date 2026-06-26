@@ -8,6 +8,11 @@ public class Board {
     private int blackPieces;
     private int whitePieces;
 
+    public enum Placement {
+        ON_BLACK,
+        ON_WHITE,
+    }
+
     private Board(int size, boolean lightSquareOnNearRight) {
         this.size = size;
         squares = new Square[size][size];
@@ -22,7 +27,7 @@ public class Board {
         }
     }
 
-    public Board(int size, boolean lightSquareOnNearRight, ArrayList<CustomPiecePlacement> piecePlacements) {
+    public Board(int size, boolean lightSquareOnNearRight, ArrayList<PiecePlacement> piecePlacements) {
         this(size, lightSquareOnNearRight);
 
         for(var piecePlacement : piecePlacements) {
@@ -37,12 +42,12 @@ public class Board {
         }
     }
 
-    public Board(int size, boolean lightSquareOnNearRight, int piecesPerSide, PiecePlacement piecePlacement) {
+    public Board(int size, boolean lightSquareOnNearRight, int piecesPerSide, Placement placement) {
         this(size, lightSquareOnNearRight);
 
         int row = 0;
-        int col = piecePlacement == PiecePlacement.ON_BLACK && lightSquareOnNearRight
-                || piecePlacement == PiecePlacement.ON_WHITE && !lightSquareOnNearRight ? 1 : 0;
+        int col = placement == Placement.ON_BLACK && lightSquareOnNearRight
+                || placement == Placement.ON_WHITE && !lightSquareOnNearRight ? 1 : 0;
         for(int i = 0; i < piecesPerSide; i++) {
             squares[row][col].placePiece(new Piece(Color.WHITE, Type.MAN));
             squares[size - row -1][size - col -1].placePiece(new Piece(Color.BLACK, Type.MAN));

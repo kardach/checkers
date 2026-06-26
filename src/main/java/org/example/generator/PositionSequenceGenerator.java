@@ -1,4 +1,4 @@
-package back_capture.flying_kings.max_capture;
+package org.example.generator;
 
 import org.example.model.Direction;
 import org.example.model.Position;
@@ -6,6 +6,7 @@ import org.example.model.Position;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class PositionSequenceGenerator {
 
@@ -25,6 +26,12 @@ public class PositionSequenceGenerator {
     public PositionSequenceGenerator(Position position) {
         tree = new Node(position);
         leaves.add(tree);
+    }
+
+    public void reset() {
+        leaves.clear();
+        leaves.add(tree);
+        tree.children.clear();
     }
 
     public PositionSequenceGenerator next(Position position) {
@@ -49,7 +56,7 @@ public class PositionSequenceGenerator {
                     }
                     return leave.children.stream();
                 })
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
         return this;
     }
 

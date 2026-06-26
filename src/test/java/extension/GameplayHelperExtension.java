@@ -1,6 +1,6 @@
 package extension;
 
-import org.example.model.CustomPiecePlacement;
+import org.example.model.PiecePlacement;
 import org.example.model.Game;
 import org.example.model.Position;
 import org.example.model.Square;
@@ -18,7 +18,7 @@ public class GameplayHelperExtension
 
     private JFrame jFrame;
     private GameplayPanel gameplayPanel;
-    private ArrayList<CustomPiecePlacement> customPiecePlacements;
+    private ArrayList<PiecePlacement> customPiecePlacements;
     private GameBuilder gameBuilder;
     private Game game;
 

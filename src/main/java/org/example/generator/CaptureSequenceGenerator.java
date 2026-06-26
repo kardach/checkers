@@ -1,4 +1,4 @@
-package back_capture.flying_kings.max_capture;
+package org.example.generator;
 
 import org.example.model.Direction;
 import org.example.model.Position;
@@ -12,9 +12,20 @@ public class CaptureSequenceGenerator {
     private List<Position> alliedKingsPositions = new ArrayList<>();
     private List<Position> enemyMenPositions = new ArrayList<>();
     private List<Position> enemyKingsPositions = new ArrayList<>();
-    private final List<List<Position>> positionSequences;
+    private List<List<Position>> positionSequences;
 
     public CaptureSequenceGenerator(List<List<Position>> positionSequences) {
+        this.positionSequences = positionSequences;
+    }
+
+    public void reset() {
+        alliedMenPositions.clear();
+        alliedKingsPositions.clear();
+        enemyMenPositions.clear();
+        enemyKingsPositions.clear();
+    }
+
+    public void setPositionSequences(List<List<Position>> positionSequences) {
         this.positionSequences = positionSequences;
     }
 
