@@ -1,6 +1,7 @@
 package org.example.model;
 
 public class Square {
+
     private final Color color;
     private Piece piece;
 
@@ -13,23 +14,16 @@ public class Square {
         this.piece = piece;
     }
 
-    public Square(Square square) {
-        this.color = square.color;
-        if(square.hasPiece()) {
-            this.piece = new Piece(square.getPiece());
-        }
-    }
-
     public Color getColor() {
         return color;
     }
 
-    public boolean hasPiece() {
-        return piece != null;
-    }
-
     public Piece getPiece() {
         return piece;
+    }
+
+    public boolean hasPiece() {
+        return piece != null;
     }
 
     public Piece removePiece() {

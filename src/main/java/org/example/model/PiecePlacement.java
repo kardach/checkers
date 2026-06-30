@@ -1,3 +1,3 @@
 package org.example.model;
 
-public record PiecePlacement(Color color, Type type, int row, int col) {}
+public record PiecePlacement(Color color, Type type, Position position) {}

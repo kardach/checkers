@@ -1,12 +1,16 @@
 package org.example.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
+
     private final int size;
     private final Square[][] squares;
-    private int blackPieces;
-    private int whitePieces;
+    private final boolean lightSquareOnNearRight;
+    private List<PiecePlacement> piecePlacements;
+    private int piecesPerSide;
+    private Placement placement;
 
     public enum Placement {
         ON_BLACK,
@@ -15,42 +19,42 @@ public class Board {
 
     private Board(int size, boolean lightSquareOnNearRight) {
         this.size = size;
+        this.lightSquareOnNearRight = lightSquareOnNearRight;
         squares = new Square[size][size];
-        for(int row = 0; row < size; row++) {
-            for(int col = 0; col < size; col++) {
-                if(lightSquareOnNearRight) {
-                    squares[row][col] = new Square((row + col) % 2 == 0 ? Color.WHITE : Color.BLACK);
-                } else {
-                    squares[row][col] = new Square((row + col) % 2 == 0 ? Color.BLACK : Color.WHITE);
-                }
+        Color nearRightSquareColor = lightSquareOnNearRight ? Color.WHITE : Color.BLACK;
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                squares[row][col] = new Square((row + col) % 2 == 0 ? nearRightSquareColor : nearRightSquareColor.opposite());
             }
         }
     }
 
-    public Board(int size, boolean lightSquareOnNearRight, ArrayList<PiecePlacement> piecePlacements) {
+    public Board(int size, boolean lightSquareOnNearRight, List<PiecePlacement> piecePlacements) {
         this(size, lightSquareOnNearRight);
-
-        for(var piecePlacement : piecePlacements) {
-            at(piecePlacement.row(), piecePlacement.col()).placePiece(
-                    new Piece(piecePlacement.color(), piecePlacement.type()));
-
-            if(piecePlacement.color() == Color.BLACK) {
-                blackPieces++;
-            } else {
-                whitePieces++;
-            }
-        }
+        placePieces(piecePlacements);
     }
 
     public Board(int size, boolean lightSquareOnNearRight, int piecesPerSide, Placement placement) {
         this(size, lightSquareOnNearRight);
+        placePieces(generatePiecePlacements(piecesPerSide, placement));
+    }
 
+    protected final void placePieces(List<PiecePlacement> piecePlacements) {
+        this.piecePlacements = piecePlacements;
+
+        for(PiecePlacement piecePlacement : piecePlacements) {
+            at(piecePlacement.position()).placePiece(new Piece(piecePlacement.color(), piecePlacement.type()));
+        }
+    }
+
+    protected final List<PiecePlacement> generatePiecePlacements(int piecesPerSide, Placement placement) {
+        List<PiecePlacement> generatedPiecePlacements = new ArrayList<>();
         int row = 0;
         int col = placement == Placement.ON_BLACK && lightSquareOnNearRight
                 || placement == Placement.ON_WHITE && !lightSquareOnNearRight ? 1 : 0;
         for(int i = 0; i < piecesPerSide; i++) {
-            squares[row][col].placePiece(new Piece(Color.WHITE, Type.MAN));
-            squares[size - row -1][size - col -1].placePiece(new Piece(Color.BLACK, Type.MAN));
+            generatedPiecePlacements.add(new PiecePlacement(Color.WHITE, Type.MAN, new Position(row, col)));
+            generatedPiecePlacements.add(new PiecePlacement(Color.BLACK, Type.MAN, new Position(size - row - 1, size - col -1)));
 
             col += 2;
             if(col >= size) {
@@ -58,33 +62,24 @@ public class Board {
                 col = (col + 1) % 2;
             }
         }
-
-        blackPieces = piecesPerSide;
-        whitePieces = piecesPerSide;
+        return generatedPiecePlacements;
     }
 
-    public Board(Board board) {
-        this.size = board.size;
-        this.blackPieces = board.blackPieces;
-        this.whitePieces = board.whitePieces;
-        this.squares = new Square[size][size];
+    public void reset() {
+        clear();
+        placePieces(piecePlacements);
+    }
+
+    protected final void clear() {
         for(int row = 0; row < size; row++) {
             for(int col = 0; col < size; col++) {
-                this.squares[row][col] = new Square(board.squares[row][col]);
+                squares[row][col].removePiece();
             }
         }
     }
 
     public int getSize() {
         return size;
-    }
-
-    public int getBlackPieceCount() {
-        return blackPieces;
-    }
-
-    public int getWhitePieceCount() {
-        return whitePieces;
     }
 
     public Square at(int row, int col) {

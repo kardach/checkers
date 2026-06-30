@@ -14,11 +14,6 @@ public class Piece {
         this.type = type;
     }
 
-    public Piece(Piece piece) {
-        this.color = piece.color;
-        this.type = piece.type;
-    }
-
     public Type getType() {
         return type;
     }
