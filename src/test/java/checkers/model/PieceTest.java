@@ -1,11 +1,7 @@
-package unit;
+package checkers.model;
 
-import org.example.model.Color;
-import org.example.model.Piece;
-import org.example.model.Type;
-import org.example.support.ReplaceCamelCase;
+import checkers.support.ReplaceCamelCase;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

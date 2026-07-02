@@ -1,17 +1,21 @@
-package unit;
+package checkers.model;
 
-import org.example.model.Color;
-import org.example.model.Piece;
-import org.example.model.Square;
-import org.example.support.ReplaceCamelCase;
-import org.junit.jupiter.api.*;
+import checkers.model.Board;
+import checkers.model.Color;
+import checkers.model.Piece;
+import checkers.model.Square;
+import checkers.support.ReplaceCamelCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayNameGeneration(ReplaceCamelCase.class)
 class SquareTest {
 
-    private final Square square = new Square(Color.BLACK);
+    private final Square square = new Square(Color.BLACK, null);
     private final Piece piece = new Piece(Color.WHITE);
 
     @Nested

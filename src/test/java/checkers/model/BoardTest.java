@@ -1,7 +1,6 @@
-package unit;
+package checkers.model;
 
-import org.example.model.*;
-import org.example.support.ReplaceCamelCase;
+import checkers.support.ReplaceCamelCase;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,9 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.example.support.CheckersAssertions.assertThat;
+import static checkers.support.CheckersAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @DisplayNameGeneration(ReplaceCamelCase.class)
 class BoardTest {
@@ -23,8 +21,8 @@ class BoardTest {
     @Nested
     class BoardWithPiecePlacementsFromListTest {
 
-        @BeforeAll
-        static void initAll() {
+        @BeforeEach
+        void init() {
             board = new Board(4, true, new ArrayList<>(List.of(
                     new PiecePlacement(Color.BLACK, Type.MAN, new Position(0, 0))
             )));
@@ -32,9 +30,9 @@ class BoardTest {
 
         static Stream<Position> positionWithoutPieceProvider() {
             List<Position> positions = new ArrayList<>();
-            for(int i = 1; i < 4; i++) {
+            for (int i = 1; i < 4; i++) {
                 positions.add(new Position(0, i));
-                for(int j = 0; j < 4; j++) {
+                for (int j = 0; j < 4; j++) {
                     positions.add(new Position(i, j));
                 }
             }
@@ -44,9 +42,9 @@ class BoardTest {
         @DisplayName("has a piece at Position[row=0, col=0]")
         @Test
         void hasAPieceAt() {
-            assertThat(board.at(new Position(0, 0)))
+            assertThat(board.at(0, 0))
                     .hasPiece()
-                    .extractingPiece()
+                    .extractPiece()
                     .hasColor(Color.BLACK)
                     .hasType(Type.MAN);
         }
@@ -59,6 +57,8 @@ class BoardTest {
 
         @Test
         void resetWorksCorrectly() {
+            assertEquals(1, board.getPieceCount().numberOfBlackPieces());
+            assertEquals(0, board.getPieceCount().numberOfWhitePieces());
             Position removeFrom = new Position(0, 0);
             Position placeAt = new Position(0, 1);
             board.at(placeAt).placePiece(new Piece(Color.WHITE));
@@ -72,8 +72,8 @@ class BoardTest {
     @Nested
     class BoarWithPiecePlacementsFromParametersTest {
 
-        @BeforeAll
-        static void initAll() {
+        @BeforeEach
+        void init() {
             board = new Board(4, true, 4, Board.Placement.ON_WHITE);
         }
 
@@ -103,20 +103,30 @@ class BoardTest {
             );
         }
 
+        @Test
+        void pieceCountingWorksCorrectly() {
+            assertEquals(4, board.getPieceCount().numberOfBlackPieces());
+            assertEquals(4, board.getPieceCount().numberOfBlackPieces());
+            board.at(0, 0).removePiece();
+            board.at(0, 0).placePiece(new Piece(Color.BLACK));
+            assertEquals(5, board.getPieceCount().numberOfBlackPieces());
+            assertEquals(3, board.getPieceCount().numberOfWhitePieces());
+        }
+
         @ParameterizedTest(name = "does not have piece at {0}")
         @MethodSource("positionWithoutPieceProvider")
-        void atShouldNotHavePieceTest(Position position) {
+        void doesNotHaveAPieceAt(Position position) {
             assertFalse(board.at(position).hasPiece());
         }
 
         @ParameterizedTest(name = "has {1} piece at {0}")
         @MethodSource("positionWithPieceProvider")
-        void atShouldHavePieceTest(Position position, Color color) {
+        void hasAPieceAt(Position position, Color color) {
             assertThat(board.at(position))
                     .hasPiece()
-                    .extractingPiece()
-                        .hasColor(color)
-                        .hasType(Type.MAN);
+                    .extractPiece()
+                    .hasColor(color)
+                    .hasType(Type.MAN);
         }
     }
 }
