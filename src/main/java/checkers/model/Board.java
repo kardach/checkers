@@ -1,4 +1,4 @@
-package org.example.model;
+package checkers.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +9,18 @@ public class Board {
     private final Square[][] squares;
     private final boolean lightSquareOnNearRight;
     private List<PiecePlacement> piecePlacements;
-    private int piecesPerSide;
-    private Placement placement;
-
-    public enum Placement {
-        ON_BLACK,
-        ON_WHITE,
-    }
+    private final PieceCount pieceCount;
 
     private Board(int size, boolean lightSquareOnNearRight) {
         this.size = size;
         this.lightSquareOnNearRight = lightSquareOnNearRight;
+        this.pieceCount = new PieceCount();
         squares = new Square[size][size];
         Color nearRightSquareColor = lightSquareOnNearRight ? Color.WHITE : Color.BLACK;
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                squares[row][col] = new Square((row + col) % 2 == 0 ? nearRightSquareColor : nearRightSquareColor.opposite());
+                squares[row][col] = new Square((row + col) % 2 == 0 ?
+                        nearRightSquareColor : nearRightSquareColor.opposite(), this);
             }
         }
     }
@@ -39,25 +35,29 @@ public class Board {
         placePieces(generatePiecePlacements(piecesPerSide, placement));
     }
 
-    protected final void placePieces(List<PiecePlacement> piecePlacements) {
+    private void placePieces(List<PiecePlacement> piecePlacements) {
         this.piecePlacements = piecePlacements;
 
-        for(PiecePlacement piecePlacement : piecePlacements) {
+        for (PiecePlacement piecePlacement : piecePlacements) {
             at(piecePlacement.position()).placePiece(new Piece(piecePlacement.color(), piecePlacement.type()));
         }
     }
 
-    protected final List<PiecePlacement> generatePiecePlacements(int piecesPerSide, Placement placement) {
+    private List<PiecePlacement> generatePiecePlacements(int piecesPerSide, Placement placement) {
         List<PiecePlacement> generatedPiecePlacements = new ArrayList<>();
         int row = 0;
         int col = placement == Placement.ON_BLACK && lightSquareOnNearRight
                 || placement == Placement.ON_WHITE && !lightSquareOnNearRight ? 1 : 0;
-        for(int i = 0; i < piecesPerSide; i++) {
-            generatedPiecePlacements.add(new PiecePlacement(Color.WHITE, Type.MAN, new Position(row, col)));
-            generatedPiecePlacements.add(new PiecePlacement(Color.BLACK, Type.MAN, new Position(size - row - 1, size - col -1)));
+        for (int i = 0; i < piecesPerSide; i++) {
+            generatedPiecePlacements.add(
+                    new PiecePlacement(Color.WHITE, Type.MAN, new Position(row, col))
+            );
+            generatedPiecePlacements.add(
+                    new PiecePlacement(Color.BLACK, Type.MAN, new Position(size - row - 1, size - col - 1))
+            );
 
             col += 2;
-            if(col >= size) {
+            if (col >= size) {
                 row += 1;
                 col = (col + 1) % 2;
             }
@@ -70,9 +70,9 @@ public class Board {
         placePieces(piecePlacements);
     }
 
-    protected final void clear() {
-        for(int row = 0; row < size; row++) {
-            for(int col = 0; col < size; col++) {
+    private void clear() {
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
                 squares[row][col].removePiece();
             }
         }
@@ -82,11 +82,53 @@ public class Board {
         return size;
     }
 
+    public PieceCount getPieceCount() {
+        return pieceCount;
+    }
+
     public Square at(int row, int col) {
         return squares[row][col];
     }
 
     public Square at(Position position) {
         return squares[position.row()][position.col()];
+    }
+
+    public enum Placement {
+        ON_BLACK,
+        ON_WHITE,
+    }
+
+    public static class PieceCount {
+
+        private int black;
+        private int white;
+
+        private PieceCount() {
+        }
+
+        public int numberOfBlackPieces() {
+            return black;
+        }
+
+        public int numberOfWhitePieces() {
+            return white;
+        }
+
+        void increment(Color color) {
+            if (Color.BLACK.equals(color)) {
+                black++;
+            } else {
+                white++;
+            }
+        }
+
+        void decrement(Color color) {
+            if (Color.BLACK.equals(color)) {
+                black--;
+            } else {
+                white--;
+            }
+        }
     }
 }

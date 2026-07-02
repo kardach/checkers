@@ -1,7 +1,7 @@
-package org.example.support;
+package checkers.support;
 
 import org.assertj.core.api.AbstractAssert;
-import org.example.model.Square;
+import checkers.model.Square;
 
 public class SquareAssert extends AbstractAssert<SquareAssert, Square> {
 
@@ -21,7 +21,7 @@ public class SquareAssert extends AbstractAssert<SquareAssert, Square> {
         return this;
     }
 
-    public PieceAssert extractingPiece() {
+    public PieceAssert extractPiece() {
         return PieceAssert.assertThat(actual().getPiece());
     }
 }

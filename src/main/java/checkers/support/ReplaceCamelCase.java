@@ -1,4 +1,4 @@
-package org.example.support;
+package checkers.support;
 
 import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.DisplayNameGenerator;

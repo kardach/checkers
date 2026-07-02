@@ -1,4 +1,4 @@
-package org.example.model;
+package checkers.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,9 @@
-package org.example.model;
+package checkers.model;
 
 public class Piece {
 
-    private Type type;
     private final Color color;
+    private Type type;
 
     public Piece(Color color) {
         this(color, Type.MAN);

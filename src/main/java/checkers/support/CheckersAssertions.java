@@ -1,7 +1,7 @@
-package org.example.support;
+package checkers.support;
 
-import org.example.model.Piece;
-import org.example.model.Square;
+import checkers.model.Piece;
+import checkers.model.Square;
 
 public class CheckersAssertions {
 

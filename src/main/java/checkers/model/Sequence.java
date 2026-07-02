@@ -1,11 +1,10 @@
-package org.example.model;
+package checkers.model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Sequence {
+
     private final List<Move> moves;
     private Position start;
 
@@ -13,25 +12,26 @@ public class Sequence {
         moves = new ArrayList<>();
     }
 
-    public void add(Position position) {
-        add(position.row(), position.col());
+    public void add(int row, int col) {
+        add(new Position(row, col));
     }
 
-    public void add(int row, int col) {
-        if(start == null) {
-            start = new Position(row, col);
+    public void add(Position position) {
+        if (start == null) {
+            start = position;
         } else {
             Position lastPosition;
-            if(moves.isEmpty()) {
+            if (moves.isEmpty()) {
                 lastPosition = start;
-                moves.add(new Move(lastPosition, new Position(row, col)));
-
+                if (!lastPosition.equals(position)) {
+                    moves.add(new Move(lastPosition, position));
+                }
             } else {
                 lastPosition = moves.getLast().to();
-                if(moves.getLast().from().equals(new Position(row, col))) {
+                if (moves.getLast().from().equals(position)) {
                     moves.removeLast();
                 } else {
-                    moves.add(new Move(lastPosition, new Position(row, col)));
+                    moves.add(new Move(lastPosition, position));
                 }
             }
         }

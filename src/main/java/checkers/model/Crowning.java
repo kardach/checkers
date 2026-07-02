@@ -1,4 +1,4 @@
-package org.example.model;
+package checkers.model;
 
 public enum Crowning {
     TERMINATE,
