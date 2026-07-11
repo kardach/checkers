@@ -11,7 +11,8 @@ public enum Direction {
     BOTTOM,
     BOTTOM_LEFT,
     LEFT,
-    TOP_LEFT;
+    TOP_LEFT,
+    NONE;
 
     public static List<Direction> getOrthogonal() {
         return new ArrayList<>(List.of(TOP, RIGHT, BOTTOM, LEFT));

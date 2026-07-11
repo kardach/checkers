@@ -1,5 +1,8 @@
 package checkers.model;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public enum Color {
     BLACK("Black") {
         public Color opposite() {

@@ -4,7 +4,9 @@ import org.assertj.core.api.AbstractAssert;
 import checkers.model.Color;
 import checkers.model.Piece;
 import checkers.model.Type;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class PieceAssert extends AbstractAssert<PieceAssert, Piece> {
 
     public PieceAssert(Piece actual) {

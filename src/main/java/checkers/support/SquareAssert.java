@@ -1,15 +1,17 @@
 package checkers.support;
 
+import checkers.model.Board;
 import org.assertj.core.api.AbstractAssert;
-import checkers.model.Square;
+import org.jspecify.annotations.NullMarked;
 
-public class SquareAssert extends AbstractAssert<SquareAssert, Square> {
+@NullMarked
+public class SquareAssert extends AbstractAssert<SquareAssert, Board.Square> {
 
-    public SquareAssert(Square square) {
+    public SquareAssert(Board.Square square) {
         super(square, SquareAssert.class);
     }
 
-    public static SquareAssert assertThat(Square square) {
+    public static SquareAssert assertThat(Board.Square square) {
         return new SquareAssert(square);
     }
 

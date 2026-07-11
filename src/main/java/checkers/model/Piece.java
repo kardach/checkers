@@ -1,5 +1,8 @@
 package checkers.model;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class Piece {
 
     private final Color color;

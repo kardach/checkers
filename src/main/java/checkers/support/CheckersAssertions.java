@@ -1,11 +1,13 @@
 package checkers.support;
 
+import checkers.model.Board;
 import checkers.model.Piece;
-import checkers.model.Square;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class CheckersAssertions {
 
-    public static SquareAssert assertThat(Square actual) {
+    public static SquareAssert assertThat(Board.Square actual) {
         return new SquareAssert(actual);
     }
 

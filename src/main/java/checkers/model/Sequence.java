@@ -1,11 +1,16 @@
 package checkers.model;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@NullMarked
 public class Sequence {
 
     private final List<Move> moves;
+    @Nullable
     private Position start;
 
     public Sequence() {
@@ -54,7 +59,7 @@ public class Sequence {
         return moves.stream().anyMatch(move -> move.equals(other));
     }
 
-    public Position getStart() {
+    public @Nullable Position getStart() {
         return start;
     }
 
