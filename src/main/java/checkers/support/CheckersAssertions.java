@@ -1,7 +1,6 @@
 package checkers.support;
 
 import checkers.model.Board;
-import checkers.model.Piece;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -11,7 +10,7 @@ public class CheckersAssertions {
         return new SquareAssert(actual);
     }
 
-    public static PieceAssert assertThat(Piece actual) {
+    public static PieceAssert assertThat(Board.Piece actual) {
         return new PieceAssert(actual);
     }
 }

@@ -24,6 +24,10 @@ public class SquareAssert extends AbstractAssert<SquareAssert, Board.Square> {
     }
 
     public PieceAssert extractPiece() {
-        return PieceAssert.assertThat(actual().getPiece());
+        Board.Piece piece = actual.getPiece();
+        if (piece == null) {
+            throw new AssertionError("Piece was expected to not be null");
+        }
+        return PieceAssert.assertThat(piece);
     }
 }

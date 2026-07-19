@@ -5,11 +5,13 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public enum Color {
     BLACK("Black") {
+        @Override
         public Color opposite() {
             return WHITE;
         }
     },
     WHITE("White") {
+        @Override
         public Color opposite() {
             return BLACK;
         }

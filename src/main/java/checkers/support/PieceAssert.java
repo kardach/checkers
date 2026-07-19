@@ -2,18 +2,18 @@ package checkers.support;
 
 import org.assertj.core.api.AbstractAssert;
 import checkers.model.Color;
-import checkers.model.Piece;
+import checkers.model.Board;
 import checkers.model.Type;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class PieceAssert extends AbstractAssert<PieceAssert, Piece> {
+public class PieceAssert extends AbstractAssert<PieceAssert, Board.Piece> {
 
-    public PieceAssert(Piece actual) {
+    public PieceAssert(Board.Piece actual) {
         super(actual, PieceAssert.class);
     }
 
-    public static PieceAssert assertThat(Piece actual) {
+    public static PieceAssert assertThat(Board.Piece actual) {
         return new PieceAssert(actual);
     }
 

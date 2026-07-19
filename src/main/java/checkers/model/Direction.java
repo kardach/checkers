@@ -1,6 +1,5 @@
 package checkers.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public enum Direction {
@@ -12,13 +11,14 @@ public enum Direction {
     BOTTOM_LEFT,
     LEFT,
     TOP_LEFT,
-    NONE;
+    NONE,
+    OTHER;
 
     public static List<Direction> getOrthogonal() {
-        return new ArrayList<>(List.of(TOP, RIGHT, BOTTOM, LEFT));
+        return List.of(TOP, RIGHT, BOTTOM, LEFT);
     }
 
     public static List<Direction> getDiagonal() {
-        return new ArrayList<>(List.of(TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT));
+        return List.of(TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT);
     }
 }

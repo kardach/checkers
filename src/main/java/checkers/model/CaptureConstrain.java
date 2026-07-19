@@ -1,7 +1,6 @@
 package checkers.model;
 
-public enum Capture {
+public enum CaptureConstrain {
     MAX,
     ALL,
-    ANY,
 }

@@ -1,7 +1,7 @@
-package org.example.generator;
+package checkers.generator;
 
-import org.example.model.Direction;
-import org.example.model.Position;
+import checkers.model.Direction;
+import checkers.model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,17 +10,9 @@ import java.util.stream.Collectors;
 
 public class PositionSequenceGenerator {
 
-    static class Node {
-        Position position;
-        List<Node> children;
-
-        Node(Position position) {
-            this.position = position;
-            this.children = new ArrayList<>();
-        }
-    }
-
     private final Node tree;
+    private final Stack<Position> path = new Stack<>();
+    private final List<List<Position>> paths = new ArrayList<>();
     private List<Node> leaves = new ArrayList<>();
 
     public PositionSequenceGenerator(Position position) {
@@ -51,7 +43,7 @@ public class PositionSequenceGenerator {
     public PositionSequenceGenerator nextInDirections(List<Direction> directions, int amount) {
         leaves = leaves.stream()
                 .flatMap(leave -> {
-                    for(Direction direction : directions) {
+                    for (Direction direction : directions) {
                         leave.children.add(new Node(leave.position.translate(direction, amount)));
                     }
                     return leave.children.stream();
@@ -65,19 +57,15 @@ public class PositionSequenceGenerator {
     }
 
     public PositionSequenceGenerator nextOrthogonalDirections(int amount) {
-        return  nextInDirections(Direction.getOrthogonal(), amount);
+        return nextInDirections(Direction.getOrthogonal(), amount);
     }
-
-    private final Stack<Position> path = new Stack<>();
-
-    private final List<List<Position>> paths = new ArrayList<>();
 
     private void generate(Node node) {
         path.push(node.position);
-        for(Node child : node.children) {
+        for (Node child : node.children) {
             generate(child);
         }
-        if(node.children.isEmpty()) {
+        if (node.children.isEmpty()) {
             paths.add(new ArrayList<>(path));
         }
         path.pop();
@@ -86,5 +74,15 @@ public class PositionSequenceGenerator {
     public List<List<Position>> generate() {
         generate(tree);
         return paths;
+    }
+
+    static class Node {
+        final Position position;
+        final List<Node> children;
+
+        Node(Position position) {
+            this.position = position;
+            this.children = new ArrayList<>();
+        }
     }
 }

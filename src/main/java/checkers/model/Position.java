@@ -5,35 +5,55 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public record Position(int row, int col) {
 
-    public Direction getDirection(Position other) {
-        int diffRow = row - other.row;
-        int diffCol = col - other.col;
+    private record Difference(int diffRow, int diffCol) {
 
-        if (diffRow < 0) {
-            if (diffCol < 0) {
-                return Direction.BOTTOM_RIGHT;
-            } else if (diffCol > 0) {
-                return Direction.BOTTOM_LEFT;
-            } else {
-                return Direction.BOTTOM;
+        public boolean isOrthogonal() {
+                return diffRow == 0 && diffCol != 0 || diffRow != 0 && diffCol == 0;
             }
-        } else if (diffRow > 0) {
-            if (diffCol < 0) {
-                return Direction.TOP_RIGHT;
-            } else if (diffCol > 0) {
-                return Direction.TOP_LEFT;
-            } else {
-                return Direction.TOP;
+
+            public boolean isDiagonal() {
+                return Math.abs(diffRow) == Math.abs(diffCol) && diffRow != 0 && diffCol != 0;
             }
-        } else {
-            if (diffCol < 0) {
-                return Direction.RIGHT;
-            } else if (diffCol > 0) {
-                return Direction.LEFT;
-            } else {
-                return Direction.NONE;
+
+            public boolean isNone() {
+                return diffRow == 0 && diffCol == 0;
+            }
+
+            public boolean isOther() {
+                return !isNone() && !isDiagonal() && !isOrthogonal();
             }
         }
+
+    private Difference getDifference(Position other) {
+        return new Difference(row - other.row, col - other.col);
+    }
+
+    public Direction getDirection(Position other) {
+        Difference difference = getDifference(other);
+        if (difference.isOrthogonal()) {
+            if (difference.diffRow() < 0) {
+                return Direction.BOTTOM;
+            } else if (difference.diffRow() > 0) {
+                return Direction.TOP;
+            } else if (difference.diffCol() < 0) {
+                return Direction.RIGHT;
+            } else if (difference.diffCol() > 0) {
+                return Direction.LEFT;
+            }
+        } else if (difference.isDiagonal()) {
+            if (difference.diffRow() < 0 && difference.diffCol() < 0) {
+                return Direction.BOTTOM_RIGHT;
+            } else if (difference.diffRow() > 0 && difference.diffCol() < 0) {
+                return Direction.TOP_RIGHT;
+            } else if (difference.diffRow() > 0 && difference.diffCol() > 0) {
+                return Direction.TOP_LEFT;
+            } else if (difference.diffRow() < 0 && difference.diffCol() > 0) {
+                return Direction.BOTTOM_LEFT;
+            }
+        } else if (difference.isNone()) {
+            return Direction.NONE;
+        }
+        return Direction.OTHER;
     }
 
     public Position translate(Direction direction, int amount) {
@@ -47,6 +67,7 @@ public record Position(int row, int col) {
             case LEFT           -> new Position(row, col - amount);
             case TOP_LEFT       -> new Position(row - amount, col - amount);
             case NONE           -> this;
+            case OTHER          -> throw new UnsupportedOperationException("Translation in other direction is not supported");
         };
     }
 }

@@ -1,7 +1,7 @@
-package org.example.generator;
+package checkers.generator;
 
-import org.example.model.Direction;
-import org.example.model.Position;
+import checkers.model.Direction;
+import checkers.model.Position;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,14 +52,14 @@ public class CaptureSequenceGenerator {
     private List<Position> generate(List<Position> positionSequence) {
         List<Position> jumpedOver = new ArrayList<>();
         Iterator<Position> iterator = positionSequence.iterator();
-        if(iterator.hasNext()) {
+        if (iterator.hasNext()) {
             Position previous = iterator.next();
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 Position current = iterator.next();
                 Direction direction = previous.getDirection(current);
                 previous = previous.translate(direction, 1);
-                while(previous.equals(current)) {
-                    if(alliedMenPositions.contains(previous) || alliedKingsPositions.contains(previous)
+                while (previous.equals(current)) {
+                    if (alliedMenPositions.contains(previous) || alliedKingsPositions.contains(previous)
                             || enemyMenPositions.contains(previous) || enemyKingsPositions.contains(previous)) {
 
                         jumpedOver.add(previous);
@@ -74,7 +74,7 @@ public class CaptureSequenceGenerator {
 
     public List<List<Position>> generate() {
         List<List<Position>> capturedSequences = new ArrayList<>();
-        for(List<Position> positionSequence : positionSequences) {
+        for (List<Position> positionSequence : positionSequences) {
             capturedSequences.add(generate(positionSequence));
         }
         return capturedSequences;
