@@ -18,6 +18,7 @@ public class PositionTest {
         assertEquals(Direction.BOTTOM_LEFT, position.getDirection(new Position(1, -1)));
         assertEquals(Direction.LEFT, position.getDirection(new Position(0, -1)));
         assertEquals(Direction.TOP_LEFT, position.getDirection(new Position(-1, -1)));
+        assertEquals(Direction.NONE, position.getDirection(new Position(0, 0)));
     }
 
     @Test
@@ -30,5 +31,6 @@ public class PositionTest {
         assertEquals(new Position(1, -1), position.translate(Direction.BOTTOM_LEFT, 1));
         assertEquals(new Position(0, -1), position.translate(Direction.LEFT, 1));
         assertEquals(new Position(-1, -1), position.translate(Direction.TOP_LEFT, 1));
+        assertEquals(position, position.translate(Direction.NONE, 1));
     }
 }

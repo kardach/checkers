@@ -27,15 +27,15 @@ public class ReplaceCamelCase extends DisplayNameGenerator.Standard {
 
     String replaceCamelCase(String camelCase) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(camelCase.charAt(0));
-        int stop = camelCase.indexOf("()") == camelCase.length() - 2 ? camelCase.length() - 2 : camelCase.length();
-        for (int i = 1; i < stop; i++) {
-            if (Character.isUpperCase(camelCase.charAt(i))) {
+        int i = 0;
+        while(i < camelCase.length() && camelCase.charAt(i) != '(') {
+            if (Character.isUpperCase(camelCase.charAt(i)) && i != 0) {
                 stringBuilder.append(' ');
                 stringBuilder.append(Character.toLowerCase(camelCase.charAt(i)));
             } else {
                 stringBuilder.append(camelCase.charAt(i));
             }
+            i++;
         }
         return stringBuilder.toString();
     }

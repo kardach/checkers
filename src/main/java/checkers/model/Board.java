@@ -94,19 +94,21 @@ public class Board {
         return position.row() >= 0 && position.row() < getSize() && position.col() >= 0 && position.col() < getSize();
     }
 
-    private Set<Position> search(Piece piece, Integer range, List<Direction> directions) {
-        Set<Position> positions = new HashSet<>();
+    private List<Position> search(Piece piece, Integer range, List<Direction> directions) {
+        List<Position> positions = new ArrayList<>();
         Position position = getPiecePosition(piece);
         Position temp;
         for (Direction direction : directions) {
             int enemyCounter = 0;
-            for (int i = 1; i <= range; i++) {
+            boolean encounteredAlly = false;
+            for (int i = 1; i <= range - 1; i++) {
                 temp = position.translate(direction, i);
                 if (!isInBounds(temp)) {
                     break;
                 }
                 if (at(temp).hasPiece()) {
-                    boolean areSameColor = at(temp).getPiece().getColor().equals(piece.getColor());
+                    boolean areSameColor = at(temp).getPiece().getColor() == piece.getColor();
+                    encounteredAlly |= areSameColor;
                     if (areSameColor) {
                         break;
                     } else {
@@ -115,14 +117,19 @@ public class Board {
                     if (enemyCounter > 1) {
                         break;
                     }
+                    continue;
                 }
+                positions.add(temp);
+            }
+            temp = position.translate(direction, range);
+            if (isInBounds(temp) && !at(temp).hasPiece() && !encounteredAlly && enemyCounter == 1) {
                 positions.add(temp);
             }
         }
         return positions;
     }
 
-    private Function<Piece, Set<Position>> search(int range, List<Direction> directions) {
+    private Function<Piece, List<Position>> search(int range, List<Direction> directions) {
         return piece -> search(piece, range, directions);
     }
 
@@ -166,7 +173,7 @@ public class Board {
         }
 
         public boolean hasPiece() {
-            return piece == null;
+            return piece != null;
         }
 
         public Piece removePiece() {
@@ -174,7 +181,7 @@ public class Board {
                 throw new NoSuchElementException("There is no piece placed on this square");
             }
             getPieceCount().decrement(piece.getColor(), piece.getType());
-            getCurrentPiecePositions().remove(piece);
+            currentPiecePositions.remove(piece);
             Piece temp = piece;
             piece = null;
             return temp;
@@ -186,7 +193,7 @@ public class Board {
             }
             this.piece = piece;
             getPieceCount().increment(piece.getColor(), piece.getType());
-            getCurrentPiecePositions().put(piece, getPosition());
+            currentPiecePositions.put(piece, getPosition());
         }
     }
 
@@ -194,8 +201,8 @@ public class Board {
 
         private final Color color;
         private Type type;
-        private final Function<Piece, Set<Position>> manSearch;
-        private final Function<Piece, Set<Position>> kingSearch;
+        private final Function<Piece, List<Position>> manSearch;
+        private final Function<Piece, List<Position>> kingSearch;
         private final static List<Direction> ALL_DIAGONAL = Direction.getDiagonal();
         private final static List<Direction> TOP_DIAGONAL = List.of(Direction.TOP_LEFT, Direction.TOP_RIGHT);
         private final static List<Direction> BOTTOM_DIAGONAL = List.of(Direction.BOTTOM_LEFT, Direction.BOTTOM_RIGHT);
@@ -208,7 +215,7 @@ public class Board {
             } else {
                 manSearch = color == Color.BLACK ? search(2, TOP_DIAGONAL) : search(2, BOTTOM_DIAGONAL);
             }
-            kingSearch = flyingKingsAllowed ? search(getSize(), ALL_DIAGONAL) : search(2, ALL_DIAGONAL);
+            kingSearch = flyingKingsAllowed ? search(getSize() + 1, ALL_DIAGONAL) : search(2, ALL_DIAGONAL);
         }
 
         public Type getType() {
@@ -232,12 +239,12 @@ public class Board {
             if (type == Type.MAN) {
                 throw new IllegalStateException("Cannot demote a man");
             }
-            getPieceCount().increment(getColor(), getType());
+            getPieceCount().decrement(getColor(), getType());
             type = Type.MAN;
             getPieceCount().increment(getColor(), getType());
         }
 
-        public Set<Position> getValidPositions() {
+        public List<Position> getValidPositions() {
             return getType() == Type.MAN
                     ? manSearch.apply(this)
                     : kingSearch.apply(this);
@@ -271,14 +278,14 @@ public class Board {
                     if (piecePlacement.type() == Type.MAN) {
                         initialWhiteMen++;
                     } else {
-                        initialBlackKings++;
+                        initialWhiteKings++;
                     }
                 }
             }
-            blackMen = this.initialBlackMen = initialBlackMen;
-            blackKings = this.initialBlackKings = initialBlackKings;
-            whiteMen = this.initialWhiteMen = initialWhiteMen;
-            whiteKings = this.initialWhiteKings = initialWhiteKings;
+            this.initialBlackMen = initialBlackMen;
+            this.initialBlackKings = initialBlackKings;
+            this.initialWhiteMen = initialWhiteMen;
+            this.initialWhiteKings = initialWhiteKings;
         }
 
         public int numberOfPieces(Color color) {
@@ -313,7 +320,7 @@ public class Board {
             }
             if (blackMen < 0 || blackKings < 0 || whiteMen < 0 || whiteKings < 0) {
                 throw new IllegalStateException("Piece count can't be less than 0");
-            } else if (blackMen > initialBlackMen || blackKings > initialBlackKings || whiteMen > initialWhiteMen || whiteKings > initialWhiteKings) {
+            } else if (blackMen + blackKings > initialBlackMen + initialBlackKings || whiteMen + whiteKings > initialWhiteMen + initialWhiteKings) {
                 throw new IllegalStateException("Piece count can't be more than initial");
             }
         }
