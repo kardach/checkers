@@ -59,31 +59,29 @@ public class CustomNameGenerator extends DisplayNameGenerator.Standard {
     }
 
     String formatShouldPart(String string) {
-        String stringBuilder = string.substring(0, 6) +
+        return string.substring(0, 6) +
                 ": " +
                 camelCaseToSpaceSeparatedLowerCase(string.substring(6));
-        return stringBuilder;
     }
 
     String formattedWhenPart(String string) {
-        String stringBuilder = string.substring(0, 4) +
+        return string.substring(0, 4) +
                 ": " +
                 camelCaseToSpaceSeparatedLowerCase(string.substring(4));
-        return stringBuilder;
     }
 
     String formatMethodName(String string) {
         int shouldPartStart = string.indexOf("Should");
         int whenPartStart = string.indexOf("When");
         if (shouldPartStart == -1 && whenPartStart == -1) {
-            return formatMethodPart(string);
+            return camelCaseToSpaceSeparatedLowerCase(string);
         } else if (shouldPartStart != -1 && whenPartStart == -1) {
             String methodPart = string.substring(0, shouldPartStart);
             String shouldPart = string.substring(shouldPartStart);
             String formattedMethodPart = formatMethodPart(methodPart);
             String formattedShouldPart = formatShouldPart(shouldPart);
             return formattedMethodPart + formattedShouldPart;
-        } else if (shouldPartStart != -1 && whenPartStart != -1) {
+        } else if (shouldPartStart != -1) {
             String methodPart = string.substring(0, shouldPartStart);
             String shouldPart = string.substring(shouldPartStart, whenPartStart);
             String whenPart = string.substring(whenPartStart);
