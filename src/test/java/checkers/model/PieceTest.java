@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 @NullMarked
@@ -28,6 +29,21 @@ class PieceTest {
         assertEquals(Type.KING, piece.getType());
         piece.demote();
         assertEquals(Type.MAN, piece.getType());
+    }
+
+    @Test
+    void promoteShouldThrowWhenPieceIsKing() {
+        Board board = new Board(9, Color.BLACK, singlePiece(Color.BLACK, Type.MAN), false, false);
+        Board.Piece piece = board.at(POSITION).getPiece();
+        piece.promote();
+        assertThrows(IllegalStateException.class, piece::promote);
+    }
+
+    @Test
+    void demoteShouldThrowWhenPieceIsMan() {
+        Board board = new Board(9, Color.BLACK, singlePiece(Color.BLACK, Type.MAN), false, false);
+        Board.Piece piece = board.at(POSITION).getPiece();
+        assertThrows(IllegalStateException.class, piece::demote);
     }
 
     final static List<Direction> TOP_LEFT_RIGHT = List.of(Direction.TOP_LEFT, Direction.TOP_RIGHT);
