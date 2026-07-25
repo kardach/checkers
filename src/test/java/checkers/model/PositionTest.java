@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayNameGeneration(CustomNameGenerator.class)
 public class PositionTest {
 
-    private final Position position = new Position(0, 0);
+    final Position position = new Position(0, 0);
 
     @Test
     void getDirectionsShouldReturnCorrectly() {
