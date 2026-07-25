@@ -38,7 +38,6 @@ public class Board {
 
     public Board(int size, Color nearRightSquareColor, int piecesPerSide, Placement placement, boolean backCaptureAllowed, boolean flyingKingsAllowed) {
         this(size, nearRightSquareColor, List.copyOf(generatePiecePlacements(size, nearRightSquareColor, piecesPerSide, placement)), backCaptureAllowed, flyingKingsAllowed);
-        placePieces();
     }
 
     private static List<PiecePlacement> generatePiecePlacements(int size, Color nearRightSquareColor, int piecesPerSide, Placement placement) {
@@ -86,7 +85,7 @@ public class Board {
         return squares[position.row()][position.col()];
     }
 
-    public Position getPiecePosition(Piece piece) {
+    private Position getPiecePosition(Piece piece) {
         return currentPiecePositions.get(piece);
     }
 
@@ -134,7 +133,7 @@ public class Board {
     }
 
     private void clear() {
-        currentPiecePositions
+        Map.copyOf(currentPiecePositions)
                 .values()
                 .forEach(position -> at(position).removePiece());
     }

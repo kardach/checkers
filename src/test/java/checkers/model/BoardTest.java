@@ -1,80 +1,106 @@
 package checkers.model;
 
-import checkers.support.ReplaceCamelCase;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import checkers.support.CustomNameGenerator;
+
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static checkers.support.CheckersAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayNameGeneration(ReplaceCamelCase.class)
+@NullMarked
+@DisplayNameGeneration(CustomNameGenerator.class)
 class BoardTest {
 
-    private static Board board;
-
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_METHOD)
     class BoardWithPiecePlacementsFromListTest {
+
+        final Position positionWithPiece = new Position(0, 0);
+        static final List<Position> POSITIONS_WITHOUT_PIECE = List.of(
+                new Position(0, 1),
+                new Position(1, 0),
+                new Position(1, 1)
+        );
+        final List<PiecePlacement> piecePlacements = List.of(
+                new PiecePlacement(Color.BLACK, Type.MAN, positionWithPiece)
+        );
+
+        Board board;
 
         @BeforeEach
         void init() {
-            board = new Board(4, true, new ArrayList<>(List.of(
-                    new PiecePlacement(Color.BLACK, Type.MAN, new Position(0, 0))
-            )));
+            board = new Board(2, Color.BLACK, piecePlacements, false, false);
         }
 
-        static Stream<Position> positionWithoutPieceProvider() {
-            List<Position> positions = new ArrayList<>();
-            for (int i = 1; i < 4; i++) {
-                positions.add(new Position(0, i));
-                for (int j = 0; j < 4; j++) {
-                    positions.add(new Position(i, j));
-                }
-            }
-            return positions.stream();
-        }
-
-        @DisplayName("has a piece at Position[row=0, col=0]")
+        @DisplayName("board, Should: have piece at Position[row=0, col=0]")
         @Test
-        void hasAPieceAt() {
-            assertThat(board.at(0, 0))
+        void boardShouldHavePieceAt() {
+            assertThat(board.at(positionWithPiece))
                     .hasPiece()
                     .extractPiece()
                     .hasColor(Color.BLACK)
                     .hasType(Type.MAN);
         }
 
-        @ParameterizedTest(name = "does not have a piece at {0}")
-        @MethodSource("positionWithoutPieceProvider")
-        void doesNotHaveAPieceAt(Position position) {
+        @ParameterizedTest(name = "{0}")
+        @FieldSource("POSITIONS_WITHOUT_PIECE")
+        void boardShouldNotHavePieceAt(Position position) {
             assertFalse(board.at(position).hasPiece());
         }
 
         @Test
-        void resetWorksCorrectly() {
-            assertEquals(1, board.getPieceCount().numberOfBlackPieces());
-            assertEquals(0, board.getPieceCount().numberOfWhitePieces());
-            Position removeFrom = new Position(0, 0);
-            Position placeAt = new Position(0, 1);
-            board.at(placeAt).placePiece(new Piece(Color.WHITE));
-            board.at(removeFrom).removePiece();
+        void isInBoundsShouldReturnCorrectly() {
+            assertTrue(board.isInBounds(positionWithPiece));
+            assertFalse(board.isInBounds(new Position(-1, -1)));
+            assertFalse(board.isInBounds(new Position(-1, 0)));
+            assertFalse(board.isInBounds(new Position(-1, 2)));
+            assertFalse(board.isInBounds(new Position(2, -1)));
+            assertFalse(board.isInBounds(new Position(2, 0)));
+            assertFalse(board.isInBounds(new Position(2, 2)));
+        }
+
+        @Test
+        void atShouldThrowWhenPositionsIsOutOfBounds() {
+            assertThrows(IllegalArgumentException.class, () -> board.at(new Position(2, 2)));
+        }
+
+        @Test
+        void getCurrentPiecePositionsShouldReturnCorrectMap() {
+            Board.Piece piece = board.at(positionWithPiece).getPiece();
+            assertEquals(Map.ofEntries(Map.entry(piece, positionWithPiece)), board.getCurrentPiecePositions());
+            piece = board.at(positionWithPiece).removePiece();
+            assertEquals(Map.of(), board.getCurrentPiecePositions());
+            board.at(POSITIONS_WITHOUT_PIECE.getFirst()).placePiece(piece);
+            assertEquals(Map.ofEntries(Map.entry(piece, POSITIONS_WITHOUT_PIECE.getFirst())), board.getCurrentPiecePositions());
+        }
+
+        @Test
+        void resetShouldRemoveAllPiecesAndPlaceNewOnInitialPositions() {
+            Board.Piece piece = board.at(positionWithPiece).removePiece();
+            board.at(POSITIONS_WITHOUT_PIECE.getFirst()).placePiece(piece);
             board.reset();
-            assertFalse(board.at(placeAt).hasPiece());
-            assertTrue(board.at(removeFrom).hasPiece());
+            assertTrue(board.at(positionWithPiece).hasPiece());
+            POSITIONS_WITHOUT_PIECE.forEach(position -> assertFalse(board.at(position).hasPiece()));
         }
     }
 
     @Nested
     class BoarWithPiecePlacementsFromParametersTest {
 
+        Board board;
+
         @BeforeEach
         void init() {
-            board = new Board(4, true, 4, Board.Placement.ON_WHITE);
+            board = new Board(4, Color.BLACK, 4, Placement.ON_BLACK, false, false);
         }
 
         static Stream<Position> positionWithoutPieceProvider() {
@@ -103,25 +129,15 @@ class BoardTest {
             );
         }
 
-        @Test
-        void pieceCountingWorksCorrectly() {
-            assertEquals(4, board.getPieceCount().numberOfBlackPieces());
-            assertEquals(4, board.getPieceCount().numberOfBlackPieces());
-            board.at(0, 0).removePiece();
-            board.at(0, 0).placePiece(new Piece(Color.BLACK));
-            assertEquals(5, board.getPieceCount().numberOfBlackPieces());
-            assertEquals(3, board.getPieceCount().numberOfWhitePieces());
-        }
-
-        @ParameterizedTest(name = "does not have piece at {0}")
+        @ParameterizedTest(name = "{0}")
         @MethodSource("positionWithoutPieceProvider")
-        void doesNotHaveAPieceAt(Position position) {
+        void boardShouldNotHavePieceAt(Position position) {
             assertFalse(board.at(position).hasPiece());
         }
 
         @ParameterizedTest(name = "has {1} piece at {0}")
         @MethodSource("positionWithPieceProvider")
-        void hasAPieceAt(Position position, Color color) {
+        void boardShouldHavePieceAt(Position position, Color color) {
             assertThat(board.at(position))
                     .hasPiece()
                     .extractPiece()
