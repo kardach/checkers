@@ -1,6 +1,7 @@
 package checkers.model;
 
-import checkers.support.ReplaceCamelCase;
+import checkers.support.CustomNameGenerator;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,13 +14,14 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
-@DisplayNameGeneration(ReplaceCamelCase.class)
+@NullMarked
+@DisplayNameGeneration(CustomNameGenerator.class)
 class PieceTest {
 
-    private final static Position POSITION = new Position(4, 4);
+    final static Position POSITION = new Position(4, 4);
 
     @Test
-    void promoteAndDemote() {
+    void promoteAndDemoteShouldChangeType() {
         Board board = new Board(9, Color.BLACK, singlePiece(Color.BLACK, Type.MAN), false, false);
         Board.Piece piece = board.at(POSITION).getPiece();
         piece.promote();
@@ -28,9 +30,9 @@ class PieceTest {
         assertEquals(Type.MAN, piece.getType());
     }
 
-    static List<Direction> TOP_LEFT_RIGHT = List.of(Direction.TOP_LEFT, Direction.TOP_RIGHT);
+    final static List<Direction> TOP_LEFT_RIGHT = List.of(Direction.TOP_LEFT, Direction.TOP_RIGHT);
 
-    static List<Direction> BOTTOM_LEFT_RIGHT = List.of(Direction.BOTTOM_LEFT, Direction.BOTTOM_RIGHT);
+    final static List<Direction> BOTTOM_LEFT_RIGHT = List.of(Direction.BOTTOM_LEFT, Direction.BOTTOM_RIGHT);
 
     static List<PiecePlacement> singlePiece(Color color, Type type) {
         return List.of(new PiecePlacement(color, type, POSITION));
@@ -58,22 +60,22 @@ class PieceTest {
     }
 
     @Nested
-    class ManWithoutBackwardCaptureTest {
+    class NotBackwardCapturingManTest {
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForBlackMan")
-        void shouldReturnCorrectValidPositionsForBlackMan(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.BLACK, piecePlacements, validPositions);
+        void getValidPositionsShouldReturnCorrectPositionsWhenManIsBlack(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForWhiteMan")
-        void shouldReturnCorrectValidPositionsForWhiteMan(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.WHITE, piecePlacements, validPositions);
+        void getValidPositionsShouldReturnCorrectPositionsWhenManIsWhite(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
         
-        void shouldReturnCorrectValidPositions(Color color, List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            Board board = new Board(9, color, piecePlacements, false, false);
+        void getValidPositionsShouldReturnCorrectPositions(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            Board board = new Board(9, Color.BLACK, piecePlacements, false, false);
             Board.Piece piece = board.at(POSITION).getPiece();
             assertEquals(validPositions, piece.getValidPositions());
         }
@@ -162,22 +164,22 @@ class PieceTest {
     }
 
     @Nested
-    class ManWithBackCaptureTest {
+    class BackwardCapturingManTest {
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForBlackMan")
-        void shouldReturnCorrectValidPositionsForBlackMan(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.BLACK, piecePlacements, validPositions);
+        void getValidPositionsShouldReturnCorrectPositionsWhenManIsBlack(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForWhiteMan")
-        void shouldReturnCorrectValidPositionsForWhiteMan(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.WHITE, piecePlacements, validPositions);
+        void getValidPositionShouldReturnCorrectPositionsWhenManIsWhite(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
 
-        void shouldReturnCorrectValidPositions(Color color, List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            Board board = new Board(9, color, piecePlacements, true, false);
+        void getValidPositionsShouldReturnCorrectPositions(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            Board board = new Board(9, Color.BLACK, piecePlacements, true, false);
             Board.Piece piece = board.at(POSITION).getPiece();
             assertEquals(validPositions, piece.getValidPositions());
         }
@@ -245,22 +247,22 @@ class PieceTest {
     }
 
     @Nested
-    class NonFlyingKingTest {
+    class NotFlyingKingTest {
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForBlackKing")
-        void shouldReturnCorrectValidPositionsForBlackKing(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.BLACK, piecePlacements, validPositions);
+        void getValidPositionShouldReturnCorrectPositionWhenKingIsBlack(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForWhiteKing")
-        void shouldReturnCorrectValidPositionsForWhiteKing(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.WHITE, piecePlacements, validPositions);
+        void getValidPositionShouldReturnCorrectPositionWhenKingIsWhite(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
 
-        void shouldReturnCorrectValidPositions(Color color, List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            Board board = new Board(9, color, piecePlacements, true, false);
+        void getValidPositionsShouldReturnCorrectPositions(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            Board board = new Board(9, Color.BLACK, piecePlacements, true, false);
             Board.Piece piece = board.at(POSITION).getPiece();
             assertEquals(validPositions, piece.getValidPositions());
         }
@@ -332,18 +334,18 @@ class PieceTest {
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForBlackKing")
-        void shouldReturnCorrectValidPositionsForBlackKing(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.BLACK, piecePlacements, validPositions);
+        void getValidPositionShouldReturnCorrectPositionWhenKingIsWhite(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
 
         @ParameterizedTest(name = "{argumentSetName}")
         @MethodSource("argumentsProviderForWhiteKing")
-        void shouldReturnCorrectValidPositionsForWhiteKing(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            shouldReturnCorrectValidPositions(Color.WHITE, piecePlacements, validPositions);
+        void getValidPositionShouldReturnCorrectPositionWhenKingIsBlack(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            getValidPositionsShouldReturnCorrectPositions(piecePlacements, validPositions);
         }
 
-        void shouldReturnCorrectValidPositions(Color color, List<PiecePlacement> piecePlacements, List<Position> validPositions) {
-            Board board = new Board(9, color, piecePlacements, true, true);
+        void getValidPositionsShouldReturnCorrectPositions(List<PiecePlacement> piecePlacements, List<Position> validPositions) {
+            Board board = new Board(9, Color.BLACK, piecePlacements, true, true);
             Board.Piece piece = board.at(POSITION).getPiece();
             assertEquals(Set.copyOf(validPositions), Set.copyOf(piece.getValidPositions()));
         }
